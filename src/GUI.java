@@ -64,18 +64,12 @@ public class GUI extends JFrame {
         vendorList.setListData(producerNames);
 
     }
-
-    /** When the login button is pressed
-     * Checks if the username and password are correct
-     * If they are, logs in the user
-     * If not, displays an error message
-     * @param e
-     */
-    private void button2(ActionEvent e) {
+    private void login(){
         if(usernameText.getText().equals("") || passwordText.getText().equals("")){
             JOptionPane.showMessageDialog(null, "Username or password is empty");
             return;
         }
+
         /** Login as vendor, sets producer functions to disabled
          */
         for (Vendor vendor : Main.vendors) {
@@ -102,8 +96,16 @@ public class GUI extends JFrame {
         }
 
         JOptionPane.showMessageDialog(null, "wrong username or password");
-
     }
+
+    /** When the login button is pressed
+     * Checks if the username and password are correct
+     * If they are, logs in the user
+     * If not, displays an error message
+     * @param e
+     */
+
+    private void loginButton(ActionEvent e) {login();}
 
     /** When the register button is pressed
      * Checks if the username already exists
@@ -114,7 +116,7 @@ public class GUI extends JFrame {
      * If the product name doesn't exist, displays an error message
      * @param e the event to be processed
      */
-    private void button3(ActionEvent e) {
+    private void registerButton(ActionEvent e) {
         if(usernameText.getText().equals("") || passwordText.getText().equals("")){
             JOptionPane.showMessageDialog(null, "Username or password is empty");
             return;
@@ -179,8 +181,8 @@ public class GUI extends JFrame {
     private void logout(ActionEvent e) {
         loginScreen.setVisible(true);
         MainPanel.setVisible(false);
-        vendorMenu.setEnabled(true);
-        producerMenu.setEnabled(true);
+        vendorMenu.setEnabled(false);
+        producerMenu.setEnabled(false);
         passwordText.setText("");
         usernameText.setText("");
     }
@@ -215,6 +217,13 @@ public class GUI extends JFrame {
         vendorDataMenuPanel.setVisible(false);
         vendorOrderPanel.setVisible(false);
         vendorProducerPanel.setVisible(false);
+    }
+
+    private void passwordTextKeyPressed(KeyEvent e) {
+        //if enter is pressed calls login
+        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+            login();
+        }
     }
     /** Initializes the components
      * @formatter:off
@@ -256,8 +265,8 @@ public class GUI extends JFrame {
         label2 = new JLabel();
         passwordText = new JPasswordField();
         panel2 = new JPanel();
-        button2 = new JButton();
-        button3 = new JButton();
+        loginButton = new JButton();
+        registerButton = new JButton();
 
         //======== this ========
         setPreferredSize(new Dimension(640, 420));
@@ -279,29 +288,31 @@ public class GUI extends JFrame {
             panel1.setForeground(new Color(0xcc0033));
             panel1.setPreferredSize(new Dimension(640, 420));
             panel1.setLayout(new MigLayout(
-                "fill,novisualpadding,hidemode 3",
+                "novisualpadding,hidemode 3",
                 // columns
                 "0[fill]0" +
                 "[grow,fill]0",
                 // rows
-                "[]"));
+                "0[grow]0"));
 
             //======== MainPanel ========
             {
                 MainPanel.setPreferredSize(new Dimension(640, 420));
-                MainPanel.setVisible(false);
+                MainPanel.setMinimumSize(new Dimension(640, 350));
                 MainPanel.setLayout(new MigLayout(
                     "hidemode 3",
                     // columns
                     "0[fill]0" +
-                    "[fill]0",
+                    "[right]0",
                     // rows
-                    "0[]0" +
-                    "[]0"));
+                    "0[30,fill]0" +
+                    "[390]0"));
 
                 //======== menuBar1 ========
                 {
                     menuBar1.setPreferredSize(new Dimension(640, 30));
+                    menuBar1.setMinimumSize(new Dimension(640, 30));
+                    menuBar1.setMargin(new Insets(0, 0, 0, 10));
 
                     //======== vendorMenu ========
                     {
@@ -351,28 +362,32 @@ public class GUI extends JFrame {
 
                     //---- hSpacer1 ----
                     hSpacer1.setOpaque(false);
+                    hSpacer1.setMaximumSize(new Dimension(350000, 32767));
                     menuBar1.add(hSpacer1);
 
                     //---- logoutButton ----
                     logoutButton.setText("Log out");
                     logoutButton.setAlignmentX(0.5F);
+                    logoutButton.setPreferredSize(new Dimension(90, 0));
+                    logoutButton.setFont(new Font("JetBrains Mono Medium", Font.PLAIN, 12));
+                    logoutButton.setMaximumSize(new Dimension(100, 27));
                     logoutButton.addActionListener(e -> logout(e));
                     menuBar1.add(logoutButton);
                 }
-                MainPanel.add(menuBar1, "cell 0 0");
+                MainPanel.add(menuBar1, "pad 0,cell 0 0,aligny top,grow 100 0");
 
                 //======== vendorOrderPanel ========
                 {
-                    vendorOrderPanel.setPreferredSize(new Dimension(640, 390));
+                    vendorOrderPanel.setPreferredSize(new Dimension(640, 200));
                     vendorOrderPanel.setVisible(false);
                     vendorOrderPanel.setLayout(new MigLayout(
                         "hidemode 3",
                         // columns
                         "[fill]" +
-                        "[fill]",
+                        "[fill]0",
                         // rows
-                        "[]" +
-                        "[]"));
+                        "0[]0" +
+                        "[]0"));
 
                     //---- label8 ----
                     label8.setText("Order");
@@ -382,16 +397,16 @@ public class GUI extends JFrame {
 
                 //======== vendorProducerPanel ========
                 {
-                    vendorProducerPanel.setPreferredSize(new Dimension(640, 390));
+                    vendorProducerPanel.setPreferredSize(new Dimension(640, 200));
                     vendorProducerPanel.setVisible(false);
                     vendorProducerPanel.setLayout(new MigLayout(
                         "hidemode 3",
                         // columns
                         "[fill]" +
-                        "[fill]",
+                        "[fill]0",
                         // rows
-                        "[]" +
-                        "[]"));
+                        "0[]0" +
+                        "[]0"));
 
                     //---- label9 ----
                     label9.setText("Producer panel");
@@ -503,6 +518,7 @@ public class GUI extends JFrame {
                 loginScreen.setPreferredSize(new Dimension(280, 200));
                 loginScreen.setMaximumSize(new Dimension(400, 400));
                 loginScreen.setMinimumSize(new Dimension(0, 0));
+                loginScreen.setVisible(false);
                 loginScreen.setLayout(new MigLayout(
                     "novisualpadding,hidemode 3,align center center",
                     // columns
@@ -532,6 +548,12 @@ public class GUI extends JFrame {
 
                 //---- passwordText ----
                 passwordText.setPreferredSize(new Dimension(200, 30));
+                passwordText.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        passwordTextKeyPressed(e);
+                    }
+                });
                 loginScreen.add(passwordText, "cell 0 3,align center center,grow 0 0");
 
                 //======== panel2 ========
@@ -546,27 +568,27 @@ public class GUI extends JFrame {
                         // rows
                         "[]"));
 
-                    //---- button2 ----
-                    button2.setText("Login");
-                    button2.setFont(new Font("JetBrains Mono Light", Font.BOLD, 13));
-                    button2.setPreferredSize(new Dimension(94, 30));
-                    button2.setBackground(new Color(0x25292e));
-                    button2.addActionListener(e -> button2(e));
-                    panel2.add(button2, "cell 0 0,alignx left,growx 0");
+                    //---- loginButton ----
+                    loginButton.setText("Login");
+                    loginButton.setFont(new Font("JetBrains Mono Light", Font.BOLD, 13));
+                    loginButton.setPreferredSize(new Dimension(94, 30));
+                    loginButton.setBackground(new Color(0x25292e));
+                    loginButton.addActionListener(e -> loginButton(e));
+                    panel2.add(loginButton, "cell 0 0,alignx left,growx 0");
 
-                    //---- button3 ----
-                    button3.setText("Register");
-                    button3.setFont(new Font("JetBrains Mono Light", Font.BOLD, 13));
-                    button3.setPreferredSize(new Dimension(94, 30));
-                    button3.setBackground(new Color(0x25292e));
-                    button3.addActionListener(e -> button3(e));
-                    panel2.add(button3, "cell 1 0,alignx right,growx 0");
+                    //---- registerButton ----
+                    registerButton.setText("Register");
+                    registerButton.setFont(new Font("JetBrains Mono Light", Font.BOLD, 13));
+                    registerButton.setPreferredSize(new Dimension(94, 30));
+                    registerButton.setBackground(new Color(0x25292e));
+                    registerButton.addActionListener(e -> registerButton(e));
+                    panel2.add(registerButton, "cell 1 0,alignx right,growx 0");
                 }
                 loginScreen.add(panel2, "cell 0 4");
             }
             panel1.add(loginScreen, "cell 1 0,align center center,grow 0 0");
         }
-        contentPane.add(panel1, "pad 0,cell 0 0,grow");
+        contentPane.add(panel1);
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -608,7 +630,7 @@ public class GUI extends JFrame {
     private JLabel label2;
     private JPasswordField passwordText;
     private JPanel panel2;
-    private JButton button2;
-    private JButton button3;
+    private JButton loginButton;
+    private JButton registerButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

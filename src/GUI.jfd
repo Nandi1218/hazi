@@ -15,9 +15,9 @@ new FormModel {
 			"visible": true
 			"minimumSize": new java.awt.Dimension( 640, 420 )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
-				"$layoutConstraints": "fill,novisualpadding,hidemode 3"
+				"$layoutConstraints": "novisualpadding,hidemode 3"
 				"$columnConstraints": "0[fill]0[grow,fill]0"
-				"$rowConstraints": "[]"
+				"$rowConstraints": "0[grow]0"
 			} ) {
 				name: "panel1"
 				"background": new java.awt.Color( 60, 63, 65, 255 )
@@ -25,15 +25,17 @@ new FormModel {
 				"preferredSize": new java.awt.Dimension( 640, 420 )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 					"$layoutConstraints": "hidemode 3"
-					"$columnConstraints": "0[fill]0[fill]0"
-					"$rowConstraints": "0[]0[]0"
+					"$columnConstraints": "0[fill]0[right]0"
+					"$rowConstraints": "0[30,fill]0[390]0"
 				} ) {
 					name: "MainPanel"
 					"preferredSize": new java.awt.Dimension( 640, 420 )
-					"visible": false
+					"minimumSize": new java.awt.Dimension( 640, 350 )
 					add( new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 						name: "menuBar1"
 						"preferredSize": new java.awt.Dimension( 640, 30 )
+						"minimumSize": new java.awt.Dimension( 640, 30 )
+						"margin": new java.awt.Insets( 0, 0, 0, 10 )
 						add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 							name: "vendorMenu"
 							"text": "Vendor"
@@ -77,23 +79,27 @@ new FormModel {
 						add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
 							name: "hSpacer1"
 							"opaque": false
+							"maximumSize": new java.awt.Dimension( 350000, 32767 )
 						} )
 						add( new FormComponent( "javax.swing.JButton" ) {
 							name: "logoutButton"
 							"text": "Log out"
 							"alignmentX": 0.5f
+							"preferredSize": new java.awt.Dimension( 90, 0 )
+							"font": new java.awt.Font( "JetBrains Mono Medium", 0, 12 )
+							"maximumSize": new java.awt.Dimension( 100, 27 )
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "logout", true ) )
 						} )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-						"value": "cell 0 0"
+						"value": "pad 0,cell 0 0,aligny top,grow 100 0"
 					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 						"$layoutConstraints": "hidemode 3"
-						"$columnConstraints": "[fill][fill]"
-						"$rowConstraints": "[][]"
+						"$columnConstraints": "[fill][fill]0"
+						"$rowConstraints": "0[]0[]0"
 					} ) {
 						name: "vendorOrderPanel"
-						"preferredSize": new java.awt.Dimension( 640, 390 )
+						"preferredSize": new java.awt.Dimension( 640, 200 )
 						"visible": false
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label8"
@@ -106,11 +112,11 @@ new FormModel {
 					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 						"$layoutConstraints": "hidemode 3"
-						"$columnConstraints": "[fill][fill]"
-						"$rowConstraints": "[][]"
+						"$columnConstraints": "[fill][fill]0"
+						"$rowConstraints": "0[]0[]0"
 					} ) {
 						name: "vendorProducerPanel"
-						"preferredSize": new java.awt.Dimension( 640, 390 )
+						"preferredSize": new java.awt.Dimension( 640, 200 )
 						"visible": false
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label9"
@@ -231,6 +237,7 @@ new FormModel {
 					"preferredSize": new java.awt.Dimension( 280, 200 )
 					"maximumSize": new java.awt.Dimension( 400, 400 )
 					"minimumSize": new java.awt.Dimension( 0, 0 )
+					"visible": false
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label1"
 						"text": "Username:"
@@ -256,6 +263,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JPasswordField" ) {
 						name: "passwordText"
 						"preferredSize": new java.awt.Dimension( 200, 30 )
+						addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "passwordTextKeyPressed", true ) )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 0 3,align center center,grow 0 0"
 					} )
@@ -268,22 +276,22 @@ new FormModel {
 						"preferredSize": new java.awt.Dimension( 200, 34 )
 						"background": new java.awt.Color( 76, 77, 78, 255 )
 						add( new FormComponent( "javax.swing.JButton" ) {
-							name: "button2"
+							name: "loginButton"
 							"text": "Login"
 							"font": new java.awt.Font( "JetBrains Mono Light", 1, 13 )
 							"preferredSize": new java.awt.Dimension( 94, 30 )
 							"background": new java.awt.Color( 37, 41, 46, 255 )
-							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loginButton", true ) )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 0,alignx left,growx 0"
 						} )
 						add( new FormComponent( "javax.swing.JButton" ) {
-							name: "button3"
+							name: "registerButton"
 							"text": "Register"
 							"font": new java.awt.Font( "JetBrains Mono Light", 1, 13 )
 							"preferredSize": new java.awt.Dimension( 94, 30 )
 							"background": new java.awt.Color( 37, 41, 46, 255 )
-							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button3", true ) )
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "registerButton", true ) )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 1 0,alignx right,growx 0"
 						} )
@@ -293,9 +301,7 @@ new FormModel {
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 1 0,align center center,grow 0 0"
 				} )
-			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "pad 0,cell 0 0,grow"
-			} )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 640, 420 )
