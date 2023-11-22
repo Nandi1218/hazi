@@ -4,13 +4,23 @@ import Serialize.*;
 import java.util.ArrayList;
 
 public class Main {
-    public static Save<Vendor> saveVendor = new Save<>();
-    static Save<Producer> saveProducer = new Save<>();
+    /** The save object for the Product class*/
     static Save<Product> saveProduct = new Save<>();
-    public static ArrayList<Product> products = Load.loadProduct();
-    public static ArrayList<Vendor> vendors = Load.loadVendor();
-    public static ArrayList<Producer> producers = Load.loadProducer();
-
+    /** The save object for the Vendor class*/
+    static Save<Producer> saveProducer = new Save<>();
+    /** The save object for the Producer class*/
+    public static Save<Vendor> saveVendor = new Save<>();
+    /** The list of all the products*/
+    public static ArrayList<Product> products =Load.loadProduct();
+    /** The list of all the vendors*/
+    public static ArrayList<Vendor> vendors =Load.loadVendor();
+    /** The list of all the producers*/
+    public static ArrayList<Producer> producers =Load.loadProducer();
+    /**
+     * The main method of the program
+     * Creates the GUI object and makes it visible
+     * @param args the arguments of the main method
+     */
     public static void main(String[] args) {
         GUI gui = new GUI();
         gui.setVisible(true);

@@ -11,12 +11,13 @@ import Commerce.Product;
 import Commerce.Vendor;
 
 
-/**
- *
+/** Class that loads the data from the serialized files
+ * @see Save
  */
 public class Load {
-    /**
-     * @return
+    /** Method that loads the Vendor data from the serialized file
+     * @return an ArrayList of the loaded data
+     * @see Save
      */
     public static ArrayList<Vendor> loadVendor() {
         ArrayList<Vendor> vendors = new ArrayList<>();
@@ -29,8 +30,9 @@ public class Load {
         return vendors;
     }
 
-    /**
-     * @return
+    /** Method that loads the Producer data from the serialized file
+     * @return an ArrayList of the loaded data
+     * @see Save
      */
     public static ArrayList<Producer> loadProducer() {
         ArrayList<Producer> producers = new ArrayList<>();
@@ -43,8 +45,8 @@ public class Load {
         return producers;
     }
 
-    /**
-     * @return
+    /** Method that loads the Product data from the serialized file
+     * @return an ArrayList of the loaded data
      */
     public static ArrayList<Product> loadProduct() {
         ArrayList<Product> products = new ArrayList<>();
