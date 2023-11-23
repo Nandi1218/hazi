@@ -1,6 +1,7 @@
 package Commerce;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Basic producer class. Represents a single producer
@@ -11,10 +12,10 @@ public class Producer implements Serializable {
     private String password;
     private String name;
     Product product;
+    ArrayList<Vendor> blackListed = new ArrayList<>();
     private double price;
     private int dailyProduction;
     private int quantity;
-
     /**
      * Constructor for the class Producer
      *
@@ -26,15 +27,20 @@ public class Producer implements Serializable {
      * @param dailyProduction the daily production of the producer
      * @param quantity        the current quantity of the product
      */
-    public Producer(String username, String password, String name, Product product, double price, int dailyProduction, int quantity) {
+    public Producer(String username, String password, String name, Product product, ArrayList<Vendor> blackListed, double price, int dailyProduction, int quantity) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.product = product;
+        this.blackListed = blackListed;
         this.price = price;
         this.dailyProduction = dailyProduction;
         this.quantity = quantity;
     }
+
+
+
+
     /**
      * getter method for the producer's name
      * @return the producer's name
@@ -151,5 +157,21 @@ public class Producer implements Serializable {
                 ", dailyProduction=" + dailyProduction +
                 ", quantity=" + quantity +
                 '}' + '\n'  ;
+    }
+    /**
+     * getter method for the producer's preferred vendors
+     *
+     * @return the producer's preferred vendors
+     */
+    public ArrayList<Vendor> getBlackListed() {
+        return blackListed;
+    }
+    /**
+     * setter method for the producer's preferred vendors
+     *
+     * @param blackListed the new preferred vendors
+     */
+    public void setBlackListed(ArrayList<Vendor> blackListed) {
+        this.blackListed = blackListed;
     }
 }

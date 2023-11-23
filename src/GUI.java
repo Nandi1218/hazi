@@ -20,6 +20,7 @@ import net.miginfocom.swing.*;
 
 public class GUI extends JFrame {
     Vendor vendorUser = null;
+    ArrayList<String> prodList;
     Producer producerUser = null;
     public GUI() {
         FlatMacDarkLaf.setup();
@@ -55,15 +56,23 @@ public class GUI extends JFrame {
     /** Sets the data in the Producer and Product lists
      */
     public void setListData(){
-        if(vendorUser.getProducts() == null || vendorUser.getProducers() == null){
-            return;
+        ArrayList<String> vendorListData = new ArrayList<>();
+        ArrayList<String> productListData = new ArrayList<>();
+        for (Producer producer : vendorUser.getProducers()) {
+            vendorListData.add(producer.getName());
         }
-        String[] productNames = (String[]) vendorUser.getProducts().toArray();
-        productsList.setListData(productNames);
-        String[] producerNames = (String[]) vendorUser.getProducers().toArray();
-        vendorList.setListData(producerNames);
+        for (Product product : vendorUser.getProducts()) {
+            productListData.add(product.getName());
+        }
+        vendorList.setModel(new DefaultComboBoxModel(vendorListData.toArray()));
+        productsList.setModel(new DefaultComboBoxModel(productListData.toArray()));
 
     }
+    /** When the login button is pressed
+     * Checks if the username and password are correct
+     * If they are, logs in the user
+     * If not, displays an error message
+     */
     private void login(){
         if(usernameText.getText().equals("") || passwordText.getText().equals("")){
             JOptionPane.showMessageDialog(null, "Username or password is empty");
@@ -75,11 +84,22 @@ public class GUI extends JFrame {
         for (Vendor vendor : Main.vendors) {
             if (vendor.getUsername().equals(usernameText.getText()) && vendor.getPassword().equals(passwordText.getText())) {
                 vendorUser = vendor;
+                for (Producer producer : vendorUser.getProducers()) {
+                    System.out.println(producer.getName());
+                }
                 JOptionPane.showMessageDialog(null, "Logged in as vendor");
+                prodList = new ArrayList<>();
                 this.setListData();
+                for (Producer producer : vendorUser.getProducers()) {
+                    prodList.add(producer.getName());
+                }
+                fillVendorProdComboBoxes();
                 loginScreen.setVisible(false);
                 MainPanel.setVisible(true);
+                vendorMenu.setEnabled(true);
                 producerMenu.setEnabled(false);
+                setMenuPanelsToFalse();
+
                 return;
             }
         }
@@ -91,6 +111,8 @@ public class GUI extends JFrame {
                 loginScreen.setVisible(false);
                 MainPanel.setVisible(true);
                 vendorMenu.setEnabled(false);
+                producerMenu.setEnabled(true);
+                setMenuPanelsToFalse();
                 return;
             }
         }
@@ -142,7 +164,7 @@ public class GUI extends JFrame {
         String name = JOptionPane.showInputDialog("Enter name");
         if (x == 0) {
             double startMoney = Double.parseDouble(JOptionPane.showInputDialog("Enter starting money"));
-            vendorUser = new Vendor(usernameText.getText(), passwordText.getText(), name, startMoney, null, null);
+            vendorUser = new Vendor(usernameText.getText(), passwordText.getText(), name, startMoney, new ArrayList<Product>(), new ArrayList<Producer>());
             Main.vendors.add(vendorUser);
             this.setListData();
             loginScreen.setVisible(false);
@@ -164,7 +186,7 @@ public class GUI extends JFrame {
 
             double startingPrice = Double.parseDouble(JOptionPane.showInputDialog("Enter starting price"));
             int dailyProduction = Integer.parseInt(JOptionPane.showInputDialog("Enter daily production"));
-            producerUser = new Producer(usernameText.getText(), passwordText.getText(), name, prod, startingPrice, dailyProduction, 0);
+            producerUser = new Producer(usernameText.getText(), passwordText.getText(), name, prod,new ArrayList<>(), startingPrice, dailyProduction, 0);
             Main.producers.add(producerUser);
             loginScreen.setVisible(false);
             MainPanel.setVisible(true);
@@ -185,6 +207,7 @@ public class GUI extends JFrame {
         producerMenu.setEnabled(false);
         passwordText.setText("");
         usernameText.setText("");
+        System.out.println(prodList);
     }
     /** When the vendor data menu is pressed
      * Displays the vendor data menu
@@ -193,6 +216,7 @@ public class GUI extends JFrame {
     private void VendorDataMenu(ActionEvent e) {
         setMenuPanelsToFalse();
         vendorDataMenuPanel.setVisible(true);
+        setListData();
     }
     /** When the vendor order menu is pressed
      * Displays the vendor order menu
@@ -202,27 +226,279 @@ public class GUI extends JFrame {
         setMenuPanelsToFalse();
         vendorOrderPanel.setVisible(true);
     }
-    /** When the vendor producer menu is pressed
+    /**
+     * Fills the vendor producer menu combo boxes
+     */
+    public void fillVendorProdComboBoxes(){
+        if(vendorUser.getProducers().isEmpty())
+        {
+            String[] currentProducers = {"No producers"};
+            ArrayList<String> mainProdList = new ArrayList<>();
+            for (Producer producer : Main.producers)
+                mainProdList.add(producer.getName());
+            vendorMenuCB.setModel(new DefaultComboBoxModel(mainProdList.toArray()));
+            VendorMenuCBCurrent.setModel(new DefaultComboBoxModel(currentProducers));
+        }
+        else {
+            prodList = new ArrayList<>();
+            ArrayList<String> mainProdList = new ArrayList<>();
+            for (Producer producer : vendorUser.getProducers()) {
+                prodList.add(producer.getName());
+            }
+            for (Producer producer : Main.producers) {
+                if(!producer.getBlackListed().contains(vendorUser))
+                    mainProdList.add(producer.getName());
+            }
+            mainProdList.removeAll(prodList);
+            if(mainProdList.isEmpty())
+                mainProdList.add("No producers");
+            //sort prodList
+            Collections.sort(prodList);
+            Collections.sort(mainProdList);
+
+            vendorMenuCB.setModel(new DefaultComboBoxModel(mainProdList.toArray()));
+            VendorMenuCBCurrent.setModel(new DefaultComboBoxModel(prodList.toArray()));
+        }
+    }
+    /**
+     * When the vendor producer menu is pressed
      * Displays the vendor producer menu
+     * If the vendor doesn't have any producers, displays all the producers
+     * If the vendor has producers, displays the producers that the vendor doesn't have
+     *
      * @param e the event to be processed
      */
     private void vendorProducerMenu(ActionEvent e) {
         setMenuPanelsToFalse();
         vendorProducerPanel.setVisible(true);
+        fillVendorProdComboBoxes();
     }
 
-    /** Sets all the menu panels to false
+    /**
+     * Sets all the menu panels to false
      */
     public void setMenuPanelsToFalse(){
         vendorDataMenuPanel.setVisible(false);
         vendorOrderPanel.setVisible(false);
         vendorProducerPanel.setVisible(false);
+        prodDataMenuPanel.setVisible(false);
+        producerVendorMenuPanel.setVisible(false);
     }
 
     private void passwordTextKeyPressed(KeyEvent e) {
         //if enter is pressed calls login
         if(e.getKeyCode() == KeyEvent.VK_ENTER){
             login();
+        }
+    }
+    /**
+     * When the vendor producer menu combo box is pressed
+     * Displays the producer's name, product and daily production
+     *
+     * @param e the event to be processed
+     */
+    private void vendorMenuCB(ActionEvent e) {
+        String producerName = (String) vendorMenuCB.getSelectedItem();
+        Producer producer = null;
+        for (Producer prod : Main.producers) {
+            if (prod.getName().equals(producerName)) {
+                producer = prod;
+                break;
+            }
+        }
+        if (producer == null)
+            return;
+        vendorProdMenuProdName.setText(producer.getName());
+        vendorProdMenuProduct.setText(producer.getProduct().getName());
+        vendorProdMenuAmount.setText(String.valueOf(producer.getDailyProduction()));
+    }
+
+    /** When the add producer button is pressed
+     * Adds the producer to the vendor's producers
+     * @param e the event to be processed
+     */
+    private void addProd(ActionEvent e) {
+        String name = (String) vendorMenuCB.getSelectedItem();
+        for (Producer producer : Main.producers){
+            if (producer.getName().equals(name)){
+                vendorUser.getProducers().add(producer);
+                break;
+            }
+        }
+        fillVendorProdComboBoxes();
+    }
+    /** When the remove producer button is pressed
+     * Removes the producer from the vendor's producers
+     * @param e the event to be processed
+     */
+
+    private void removeProd(ActionEvent e) {
+        String name = (String) VendorMenuCBCurrent.getSelectedItem();
+        for (Producer producer : vendorUser.getProducers()){
+            if (producer.getName().equals(name)){
+                vendorUser.getProducers().remove(producer);
+                break;
+            }
+        }
+        fillVendorProdComboBoxes();
+    }
+
+    private void VendorMenuCBCurrent(ActionEvent e) {
+        String producerName = (String) VendorMenuCBCurrent.getSelectedItem();
+        Producer producer = null;
+        for (Producer prod : Main.producers) {
+            if (prod.getName().equals(producerName)) {
+                producer = prod;
+                break;
+            }
+        }
+        if(producer == null)
+            return;
+        vendorProdMenuProdName.setText(producer.getName());
+        vendorProdMenuProduct.setText(producer.getProduct().getName());
+        vendorProdMenuAmount.setText(String.valueOf(producer.getDailyProduction()));
+    }
+
+    /** When the producer data menu is pressed
+     * Displays the producer data menu
+     * Displays the producer's name, product, product description, product id, price, quantity and daily production
+     * @param e the event to be processed
+     */
+    private void ProducerDataMenu(ActionEvent e) {
+        setMenuPanelsToFalse();
+        prodDataMenuPanel.setVisible(true);
+        producerName.setText(producerUser.getName());
+        producerProdName.setText(producerUser.getProduct().getName());
+        producerProdDesc.setText(producerUser.getProduct().getDescription());
+        producerProdId.setText(String.valueOf(producerUser.getProduct().getId()));
+        producerQantity.setText(String.valueOf(producerUser.getQuantity()));
+        producerDailyProd.setText(String.valueOf(producerUser.getDailyProduction()));
+        prodPrice.setText(String.valueOf(producerUser.getPrice())+"$");
+    }
+
+    /** When the edit producer button is pressed
+     * Asks the user which fields they want to edit
+     * If the user chooses to edit the name, asks for the new name and sets it
+     * If the user chooses to edit the product, asks for the new product name and description
+     * If the product doesn't exist, creates a new product
+     * If the user chooses to edit the quantity, asks for the new quantity and sets it
+     * If the user chooses to edit the daily production, asks for the new daily production and sets it
+     * If the user chooses to edit the price, asks for the new price and sets it
+     * @param e the event to be processed
+     */
+    private void editProd(ActionEvent e) {
+        if(checkBoxName.isSelected()){
+            String newName = JOptionPane.showInputDialog("Enter new name");
+            producerUser.setName(newName);
+            producerName.setText(newName);
+        }
+        if(checkBoxProd.isSelected()){
+            String newName = JOptionPane.showInputDialog("Enter new product name");
+            for (Product product : Main.products){
+                if(product.getName().equals(newName)) {
+                    producerUser.setProduct(product);
+                    producerProdName.setText(product.getName());
+                    producerProdDesc.setText(product.getDescription());
+                    producerProdId.setText(String.valueOf(product.getId()));
+                    break;
+                }
+            }
+            Product newProduct;
+            if(!producerUser.getProduct().getName().equals(newName)) {
+                newProduct = new Product(newName, JOptionPane.showInputDialog("Enter new product description"));
+                Main.products.add(newProduct);
+                producerUser.setProduct(newProduct);
+                producerProdName.setText(newName);
+                producerProdDesc.setText(newProduct.getDescription());
+                producerProdId.setText(String.valueOf(newProduct.getId()));
+            }
+
+        }
+        if(checkBoxQuantity.isSelected()){
+            int newQuantity = Integer.parseInt(JOptionPane.showInputDialog("Enter new quantity"));
+            producerUser.setQuantity(newQuantity);
+            producerQantity.setText(String.valueOf(newQuantity));
+        }
+        if(checkBoxDProd.isSelected()){
+            int newDaily = Integer.parseInt(JOptionPane.showInputDialog("Enter new daily production"));
+            producerUser.setDailyProduction(newDaily);
+            producerDailyProd.setText(String.valueOf(newDaily));
+        }
+        if(checkBoxPrice.isSelected()){
+            double newPrice = Double.parseDouble(JOptionPane.showInputDialog("Enter new price"));
+            producerUser.setPrice(newPrice);
+            prodPrice.setText(String.valueOf(newPrice)+"$");
+        }
+        checkBoxName.setSelected(false);
+        checkBoxProd.setSelected(false);
+        checkBoxQuantity.setSelected(false);
+        checkBoxDProd.setSelected(false);
+        checkBoxPrice.setSelected(false);
+    }
+    /** When the producer vendors menu is pressed
+     * Displays the producer vendors menu
+     * Displays the producer's vendors
+     * @param e the event to be processed
+     */
+    private void producerVendorsMenu(ActionEvent e) {
+        setMenuPanelsToFalse();
+        ArrayList<String> vendorNames = new ArrayList<>();
+        for (Vendor vendor : Main.vendors) {
+            vendorNames.add(vendor.getName());
+        }
+        comboBoxVendors.setModel(new DefaultComboBoxModel(vendorNames.toArray()));
+        
+        producerVendorMenuPanel.setVisible(true);
+
+    }
+    /** When the vendor data menu is pressed
+     * Displays the vendor data menu
+     * Displays the vendor's name, money, products and producers
+     * @param e the event to be processed
+     */
+    private void vendors(ActionEvent e) {
+        prodVendorName.setText(comboBoxVendors.getSelectedItem().toString());
+        Vendor tempVendor;
+        for (Vendor vendor:Main.vendors){
+            if(vendor.getName().equals(comboBoxVendors.getSelectedItem().toString())){
+                tempVendor = vendor;
+                if(producerUser.getBlackListed().contains(tempVendor))
+                    checkBoxBlackListed.setSelected(true);
+                else
+                    checkBoxBlackListed.setSelected(false);
+                break;
+            }
+        }
+
+    }
+    /** When the vendor data menu is pressed
+     * Displays the vendor data menu
+     * Displays the vendor's name, money, products and producers
+     * @param e the event to be processed
+     */
+    private void blackListed(ActionEvent e) {
+        if(checkBoxBlackListed.isSelected()){
+            for (Vendor vendor : Main.vendors) {
+                if(vendor.getName().equals(comboBoxVendors.getSelectedItem().toString())){
+                    if(!producerUser.getBlackListed().contains(vendor)) {
+                        producerUser.getBlackListed().add(vendor);
+                        if(vendor.getProducers().contains(producerUser))
+                            vendor.getProducers().remove(producerUser);
+                    }
+                    break;
+                }
+            }
+        }
+        else{
+            for (Vendor vendor : Main.vendors) {
+                if(vendor.getName().equals(comboBoxVendors.getSelectedItem().toString())){
+                    if(producerUser.getBlackListed().contains(vendor)) {
+                        producerUser.getBlackListed().remove(vendor);
+                        System.out.println("unblacklisted "+vendor.getName());
+                    }
+                    break;
+                }
+            }
         }
     }
     /** Initializes the components
@@ -239,13 +515,55 @@ public class GUI extends JFrame {
         VendorOrderMenu = new JMenuItem();
         producerMenu = new JMenu();
         ProducerDataMenu = new JMenuItem();
-        menu3 = new JMenu();
+        producerVendorsMenu = new JMenuItem();
+        misc = new JMenu();
+        miscOrderMenu = new JMenuItem();
         hSpacer1 = new JPanel(null);
         logoutButton = new JButton();
+        OrderHistoryMenuPanel = new JPanel();
+        scrollPane1 = new JScrollPane();
+        orderHistoryTable = new JTable();
+        producerVendorMenuPanel = new JPanel();
+        label22 = new JLabel();
+        prodVendorName = new JLabel();
+        label25 = new JLabel();
+        label24 = new JLabel();
+        checkBoxBlackListed = new JCheckBox();
+        comboBoxVendors = new JComboBox();
+        prodDataMenuPanel = new JPanel();
+        name = new JLabel();
+        producerName = new JLabel();
+        checkBoxName = new JCheckBox();
+        label14 = new JLabel();
+        producerProdName = new JLabel();
+        producerProdDesc = new JLabel();
+        producerProdId = new JLabel();
+        checkBoxProd = new JCheckBox();
+        label21 = new JLabel();
+        prodPrice = new JLabel();
+        checkBoxPrice = new JCheckBox();
+        label18 = new JLabel();
+        producerQantity = new JLabel();
+        checkBoxQuantity = new JCheckBox();
+        label19 = new JLabel();
+        producerDailyProd = new JLabel();
+        checkBoxDProd = new JCheckBox();
+        editProd = new JButton();
         vendorOrderPanel = new JPanel();
         label8 = new JLabel();
         vendorProducerPanel = new JPanel();
         label9 = new JLabel();
+        vendorProdMenuProdName = new JLabel();
+        label12 = new JLabel();
+        label5 = new JLabel();
+        vendorProdMenuProduct = new JLabel();
+        addProd = new JButton();
+        vendorMenuCB = new JComboBox();
+        label10 = new JLabel();
+        vendorProdMenuAmount = new JLabel();
+        label13 = new JLabel();
+        removeProd = new JButton();
+        VendorMenuCBCurrent = new JComboBox();
         vendorDataMenuPanel = new JPanel();
         vendorDataJPanel = new JPanel();
         label7 = new JLabel();
@@ -311,8 +629,8 @@ public class GUI extends JFrame {
                 //======== menuBar1 ========
                 {
                     menuBar1.setPreferredSize(new Dimension(640, 30));
-                    menuBar1.setMinimumSize(new Dimension(640, 30));
-                    menuBar1.setMargin(new Insets(0, 0, 0, 10));
+                    menuBar1.setMinimumSize(new Dimension(100, 30));
+                    menuBar1.setMargin(new Insets(0, 10, 0, 15));
 
                     //======== vendorMenu ========
                     {
@@ -349,16 +667,26 @@ public class GUI extends JFrame {
                         //---- ProducerDataMenu ----
                         ProducerDataMenu.setText("Data");
                         ProducerDataMenu.setBackground(new Color(0x4a4a4a));
+                        ProducerDataMenu.addActionListener(e -> ProducerDataMenu(e));
                         producerMenu.add(ProducerDataMenu);
+
+                        //---- producerVendorsMenu ----
+                        producerVendorsMenu.setText("Vendors");
+                        producerVendorsMenu.addActionListener(e -> producerVendorsMenu(e));
+                        producerMenu.add(producerVendorsMenu);
                     }
                     menuBar1.add(producerMenu);
 
-                    //======== menu3 ========
+                    //======== misc ========
                     {
-                        menu3.setText("text");
-                        menu3.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 14));
+                        misc.setText("History");
+                        misc.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 14));
+
+                        //---- miscOrderMenu ----
+                        miscOrderMenu.setText("Orders");
+                        misc.add(miscOrderMenu);
                     }
-                    menuBar1.add(menu3);
+                    menuBar1.add(misc);
 
                     //---- hSpacer1 ----
                     hSpacer1.setOpaque(false);
@@ -370,11 +698,174 @@ public class GUI extends JFrame {
                     logoutButton.setAlignmentX(0.5F);
                     logoutButton.setPreferredSize(new Dimension(90, 0));
                     logoutButton.setFont(new Font("JetBrains Mono Medium", Font.PLAIN, 12));
-                    logoutButton.setMaximumSize(new Dimension(100, 27));
+                    logoutButton.setMaximumSize(null);
+                    logoutButton.setMinimumSize(null);
                     logoutButton.addActionListener(e -> logout(e));
                     menuBar1.add(logoutButton);
                 }
                 MainPanel.add(menuBar1, "pad 0,cell 0 0,aligny top,grow 100 0");
+
+                //======== OrderHistoryMenuPanel ========
+                {
+                    OrderHistoryMenuPanel.setLayout(new MigLayout(
+                        "hidemode 3",
+                        // columns
+                        "10[fill]10",
+                        // rows
+                        "5[]5"));
+
+                    //======== scrollPane1 ========
+                    {
+
+                        //---- orderHistoryTable ----
+                        orderHistoryTable.setPreferredSize(new Dimension(640, 40));
+                        scrollPane1.setViewportView(orderHistoryTable);
+                    }
+                    OrderHistoryMenuPanel.add(scrollPane1, "cell 0 0");
+                }
+                MainPanel.add(OrderHistoryMenuPanel, "cell 0 1");
+
+                //======== producerVendorMenuPanel ========
+                {
+                    producerVendorMenuPanel.setVisible(false);
+                    producerVendorMenuPanel.setLayout(new MigLayout(
+                        "hidemode 3,alignx left",
+                        // columns
+                        "20[249,fill]30" +
+                        "[281,right]0",
+                        // rows
+                        "[]" +
+                        "[]" +
+                        "[]"));
+
+                    //---- label22 ----
+                    label22.setText("Name:");
+                    label22.setPreferredSize(new Dimension(100, 16));
+                    label22.setFont(new Font("JetBrains Mono SemiBold", Font.PLAIN, 22));
+                    producerVendorMenuPanel.add(label22, "cell 0 0,alignx left,growx 0");
+
+                    //---- prodVendorName ----
+                    prodVendorName.setText("text");
+                    prodVendorName.setPreferredSize(new Dimension(30, 16));
+                    prodVendorName.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 22));
+                    producerVendorMenuPanel.add(prodVendorName, "cell 0 0,alignx right,growx 0");
+
+                    //---- label25 ----
+                    label25.setText("Vendors:");
+                    label25.setFont(new Font("JetBrains Mono Medium", Font.PLAIN, 22));
+                    producerVendorMenuPanel.add(label25, "cell 1 0");
+
+                    //---- label24 ----
+                    label24.setText("Blacklisted:");
+                    label24.setPreferredSize(new Dimension(160, 16));
+                    label24.setFont(new Font("JetBrains Mono SemiBold", Font.PLAIN, 22));
+                    producerVendorMenuPanel.add(label24, "cell 0 1,alignx left,growx 0");
+
+                    //---- checkBoxBlackListed ----
+                    checkBoxBlackListed.setPreferredSize(new Dimension(30, 19));
+                    checkBoxBlackListed.addActionListener(e -> blackListed(e));
+                    producerVendorMenuPanel.add(checkBoxBlackListed, "cell 0 1,alignx right,growx 0");
+
+                    //---- comboBoxVendors ----
+                    comboBoxVendors.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 16));
+                    comboBoxVendors.setPreferredSize(new Dimension(140, 32));
+                    comboBoxVendors.addActionListener(e -> vendors(e));
+                    producerVendorMenuPanel.add(comboBoxVendors, "cell 1 1");
+                }
+                MainPanel.add(producerVendorMenuPanel, "cell 0 1");
+
+                //======== prodDataMenuPanel ========
+                {
+                    prodDataMenuPanel.setPreferredSize(new Dimension(640, 420));
+                    prodDataMenuPanel.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 22));
+                    prodDataMenuPanel.setVisible(false);
+                    prodDataMenuPanel.setLayout(new MigLayout(
+                        "hidemode 3,aligny center",
+                        // columns
+                        "30[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]",
+                        // rows
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]"));
+
+                    //---- name ----
+                    name.setText("Name:");
+                    name.setFont(new Font("JetBrains Mono SemiBold", Font.PLAIN, 22));
+                    prodDataMenuPanel.add(name, "cell 0 0");
+
+                    //---- producerName ----
+                    producerName.setText("prodName");
+                    producerName.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 18));
+                    prodDataMenuPanel.add(producerName, "cell 1 0");
+                    prodDataMenuPanel.add(checkBoxName, "cell 4 0");
+
+                    //---- label14 ----
+                    label14.setText("Product:");
+                    label14.setFont(new Font("JetBrains Mono SemiBold", Font.PLAIN, 22));
+                    prodDataMenuPanel.add(label14, "cell 0 1");
+
+                    //---- producerProdName ----
+                    producerProdName.setText("name");
+                    producerProdName.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 18));
+                    prodDataMenuPanel.add(producerProdName, "cell 1 1");
+
+                    //---- producerProdDesc ----
+                    producerProdDesc.setText("descr");
+                    producerProdDesc.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 18));
+                    prodDataMenuPanel.add(producerProdDesc, "cell 2 1");
+
+                    //---- producerProdId ----
+                    producerProdId.setText("id");
+                    producerProdId.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 18));
+                    prodDataMenuPanel.add(producerProdId, "cell 3 1");
+                    prodDataMenuPanel.add(checkBoxProd, "cell 4 1");
+
+                    //---- label21 ----
+                    label21.setText("Price:");
+                    label21.setFont(new Font("JetBrains Mono SemiBold", Font.PLAIN, 22));
+                    prodDataMenuPanel.add(label21, "cell 0 2");
+
+                    //---- prodPrice ----
+                    prodPrice.setText("price");
+                    prodPrice.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 18));
+                    prodDataMenuPanel.add(prodPrice, "cell 1 2");
+                    prodDataMenuPanel.add(checkBoxPrice, "cell 4 2");
+
+                    //---- label18 ----
+                    label18.setText("Quantity:");
+                    label18.setFont(new Font("JetBrains Mono SemiBold", Font.PLAIN, 22));
+                    prodDataMenuPanel.add(label18, "cell 0 3");
+
+                    //---- producerQantity ----
+                    producerQantity.setText("qan");
+                    producerQantity.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 18));
+                    prodDataMenuPanel.add(producerQantity, "cell 1 3");
+                    prodDataMenuPanel.add(checkBoxQuantity, "cell 4 3");
+
+                    //---- label19 ----
+                    label19.setText("Daily Production:");
+                    label19.setFont(new Font("JetBrains Mono SemiBold", Font.PLAIN, 22));
+                    prodDataMenuPanel.add(label19, "cell 0 4");
+
+                    //---- producerDailyProd ----
+                    producerDailyProd.setText("daily");
+                    producerDailyProd.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 18));
+                    prodDataMenuPanel.add(producerDailyProd, "cell 1 4");
+                    prodDataMenuPanel.add(checkBoxDProd, "cell 4 4");
+
+                    //---- editProd ----
+                    editProd.setText("Edit selected");
+                    editProd.addActionListener(e -> editProd(e));
+                    prodDataMenuPanel.add(editProd, "cell 0 5");
+                }
+                MainPanel.add(prodDataMenuPanel, "cell 0 1");
 
                 //======== vendorOrderPanel ========
                 {
@@ -397,20 +888,85 @@ public class GUI extends JFrame {
 
                 //======== vendorProducerPanel ========
                 {
-                    vendorProducerPanel.setPreferredSize(new Dimension(640, 200));
+                    vendorProducerPanel.setPreferredSize(new Dimension(640, 390));
                     vendorProducerPanel.setVisible(false);
                     vendorProducerPanel.setLayout(new MigLayout(
-                        "hidemode 3",
+                        "fillx,hidemode 3,aligny center",
                         // columns
+                        "20[fill]" +
                         "[fill]" +
-                        "[fill]0",
+                        "[400,right]20",
                         // rows
-                        "0[]0" +
-                        "[]0"));
+                        "100[]0" +
+                        "[]0" +
+                        "[]" +
+                        "[]" +
+                        "[120]"));
 
                     //---- label9 ----
-                    label9.setText("Producer panel");
+                    label9.setText("Name:");
+                    label9.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 22));
                     vendorProducerPanel.add(label9, "cell 0 0");
+
+                    //---- vendorProdMenuProdName ----
+                    vendorProdMenuProdName.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 22));
+                    vendorProducerPanel.add(vendorProdMenuProdName, "cell 1 0");
+
+                    //---- label12 ----
+                    label12.setText("Available Producers:");
+                    label12.setPreferredSize(new Dimension(120, 16));
+                    label12.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 22));
+                    vendorProducerPanel.add(label12, "cell 2 0");
+
+                    //---- label5 ----
+                    label5.setText("Produces:");
+                    label5.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 22));
+                    vendorProducerPanel.add(label5, "cell 0 1");
+
+                    //---- vendorProdMenuProduct ----
+                    vendorProdMenuProduct.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 22));
+                    vendorProducerPanel.add(vendorProdMenuProduct, "cell 1 1");
+
+                    //---- addProd ----
+                    addProd.setText("Add");
+                    addProd.setPreferredSize(new Dimension(100, 30));
+                    addProd.setFont(new Font("JetBrains Mono SemiBold", Font.PLAIN, 16));
+                    addProd.addActionListener(e -> addProd(e));
+                    vendorProducerPanel.add(addProd, "cell 2 1");
+
+                    //---- vendorMenuCB ----
+                    vendorMenuCB.setPreferredSize(new Dimension(180, 26));
+                    vendorMenuCB.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 16));
+                    vendorMenuCB.addActionListener(e -> vendorMenuCB(e));
+                    vendorProducerPanel.add(vendorMenuCB, "cell 2 1");
+
+                    //---- label10 ----
+                    label10.setText("Quantity:");
+                    label10.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 22));
+                    vendorProducerPanel.add(label10, "cell 0 2");
+
+                    //---- vendorProdMenuAmount ----
+                    vendorProdMenuAmount.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 22));
+                    vendorProducerPanel.add(vendorProdMenuAmount, "cell 1 2");
+
+                    //---- label13 ----
+                    label13.setText("Current Producers:");
+                    label13.setPreferredSize(new Dimension(120, 16));
+                    label13.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 22));
+                    vendorProducerPanel.add(label13, "cell 2 2");
+
+                    //---- removeProd ----
+                    removeProd.setText("Remove");
+                    removeProd.setPreferredSize(new Dimension(100, 30));
+                    removeProd.setFont(new Font("JetBrains Mono SemiBold", Font.PLAIN, 16));
+                    removeProd.addActionListener(e -> removeProd(e));
+                    vendorProducerPanel.add(removeProd, "cell 2 3");
+
+                    //---- VendorMenuCBCurrent ----
+                    VendorMenuCBCurrent.setPreferredSize(new Dimension(180, 26));
+                    VendorMenuCBCurrent.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 16));
+                    VendorMenuCBCurrent.addActionListener(e -> VendorMenuCBCurrent(e));
+                    vendorProducerPanel.add(VendorMenuCBCurrent, "cell 2 3");
                 }
                 MainPanel.add(vendorProducerPanel, "cell 0 1");
 
@@ -604,13 +1160,55 @@ public class GUI extends JFrame {
     private JMenuItem VendorOrderMenu;
     private JMenu producerMenu;
     private JMenuItem ProducerDataMenu;
-    private JMenu menu3;
+    private JMenuItem producerVendorsMenu;
+    private JMenu misc;
+    private JMenuItem miscOrderMenu;
     private JPanel hSpacer1;
     private JButton logoutButton;
+    private JPanel OrderHistoryMenuPanel;
+    private JScrollPane scrollPane1;
+    private JTable orderHistoryTable;
+    private JPanel producerVendorMenuPanel;
+    private JLabel label22;
+    private JLabel prodVendorName;
+    private JLabel label25;
+    private JLabel label24;
+    private JCheckBox checkBoxBlackListed;
+    private JComboBox comboBoxVendors;
+    private JPanel prodDataMenuPanel;
+    private JLabel name;
+    private JLabel producerName;
+    private JCheckBox checkBoxName;
+    private JLabel label14;
+    private JLabel producerProdName;
+    private JLabel producerProdDesc;
+    private JLabel producerProdId;
+    private JCheckBox checkBoxProd;
+    private JLabel label21;
+    private JLabel prodPrice;
+    private JCheckBox checkBoxPrice;
+    private JLabel label18;
+    private JLabel producerQantity;
+    private JCheckBox checkBoxQuantity;
+    private JLabel label19;
+    private JLabel producerDailyProd;
+    private JCheckBox checkBoxDProd;
+    private JButton editProd;
     private JPanel vendorOrderPanel;
     private JLabel label8;
     private JPanel vendorProducerPanel;
     private JLabel label9;
+    private JLabel vendorProdMenuProdName;
+    private JLabel label12;
+    private JLabel label5;
+    private JLabel vendorProdMenuProduct;
+    private JButton addProd;
+    private JComboBox vendorMenuCB;
+    private JLabel label10;
+    private JLabel vendorProdMenuAmount;
+    private JLabel label13;
+    private JButton removeProd;
+    private JComboBox VendorMenuCBCurrent;
     private JPanel vendorDataMenuPanel;
     private JPanel vendorDataJPanel;
     private JLabel label7;

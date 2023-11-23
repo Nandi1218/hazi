@@ -24,13 +24,14 @@ public class Main {
     public static void main(String[] args) {
         GUI gui = new GUI();
         gui.setVisible(true);
-
-        /*for (int i = 0; i < 10; i++) {
+    /*
+        for (int i = 0; i < 10; i++) {
             products.add(new Product("product"+i, "desc"+i));
-            vendors.add(new Vendor("vendorUsername"+i, "vendorPassword"+i, "vendor"+i, i, null, null));
-            producers.add(new Producer("producerUsername"+i,"prodcerPassword"+i,"producer"+i, products.get(i), i*1000, i*10, i*100));
+            vendors.add(new Vendor("vendorUsername"+i, "vendorPassword"+i, "vendor"+i, i, new ArrayList<Product>(), new ArrayList<Producer>()));
+            producers.add(new Producer("producerUsername"+i,"prodcerPassword"+i,"producer"+i, products.get(i),new ArrayList<Vendor>(), i*1000, i*10, i*100));
 
         }*/
+
 
     }
 }
