@@ -174,4 +174,5 @@ public class Producer implements Serializable {
     public void setBlackListed(ArrayList<Vendor> blackListed) {
         this.blackListed = blackListed;
     }
+
 }

@@ -58,5 +58,15 @@ public class Load {
         }
         return products;
     }
+    public static ArrayList<Commerce.Order> loadOrder() {
+        ArrayList<Commerce.Order> orders = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("src/Serialize/" + "Order.ser"))) {
+            orders = (ArrayList<Commerce.Order>) ois.readObject();
+            System.out.println("Successfully loaded!");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
 
 }
