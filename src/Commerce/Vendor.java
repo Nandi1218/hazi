@@ -31,13 +31,13 @@ public class Vendor implements Serializable {
      * @param products The vendor's products
      * @param producers The vendor's producers
      */
-    public Vendor(String username, String password, String name, double money, ArrayList<Product> products, ArrayList<Producer> producers) {
+    public Vendor(String username, String password, String name, double money) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.money = money;
-        this.products = products;
-        this.producers = producers;
+        this.products = new ArrayList<>();
+        this.producers = new ArrayList<>();
     }
 
     /** Getter method for the vendor's username

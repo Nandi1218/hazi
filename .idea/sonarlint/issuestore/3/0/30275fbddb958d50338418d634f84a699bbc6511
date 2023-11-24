@@ -1,0 +1,9 @@
+
+
+java:S1319"kThe type of "blackListed" should be an interface such as "List" rather than the implementation "ArrayList".(Ά‘άμ
+‡
+java:S1319¦"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(•΅δ
+‡
+java:S1319®"kThe type of "blackListed" should be an interface such as "List" rather than the implementation "ArrayList".(»λαόÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(φψϋϊÿÿÿÿ
+V	java:S107"AConstructor has 8 parameters, which is greater than 7 authorized.(Ά‘άμ

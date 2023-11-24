@@ -111,6 +111,7 @@ new FormModel {
 						"$rowConstraints": "[][][]"
 					} ) {
 						name: "vendorOrderPanel"
+						"visible": false
 						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 							name: "scrollPane2"
 							"preferredSize": new java.awt.Dimension( 640, 300 )

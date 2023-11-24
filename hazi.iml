@@ -11,4 +11,7 @@
     <orderEntry type="library" name="flatlaf-3.2.1" level="project" />
     <orderEntry type="library" name="beansbinding-1.2.1" level="project" />
   </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="1b86e760-f6e8-48d4-9b64-5a8ffbbac6e4" />
+  </component>
 </module>

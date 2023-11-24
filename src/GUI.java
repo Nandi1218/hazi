@@ -24,7 +24,7 @@ import tableModels.OrderHistoryTableModel;
 public class GUI extends JFrame {
     Vendor vendorUser = null;
     ArrayList<String> prodList;
-    private final OrderHistoryTableModel dataModel = new OrderHistoryTableModel();
+    public static final OrderHistoryTableModel dataModel = new OrderHistoryTableModel();
     Producer producerUser = null;
 
     /** Constructor for the GUI class
@@ -34,11 +34,13 @@ public class GUI extends JFrame {
     public GUI() {
         FlatMacDarkLaf.setup();
         initComponents();
-        dataModel.addOrder(Main.vendors.get(0), Main.producers.get(0), Main.products.get(0), 10);
-        dataModel.addOrder(Main.vendors.get(1), Main.producers.get(1), Main.products.get(5), 13);
+
         orderHistoryTable.setModel(dataModel);
         TableRowSorter<OrderHistoryTableModel> sorter = new TableRowSorter<>(dataModel);
         orderHistoryTable.setRowSorter(sorter);
+        GUI.dataModel.addOrder(Main.vendors.get(0), Main.producers.get(0), Main.products.get(0), 10);
+        GUI.dataModel.addOrder(Main.vendors.get(1), Main.producers.get(1), Main.products.get(5), 13);
+
         addWindowListener(new WindowAdapter() {
             /** Invoked when a window is in the process of being closed.
              * @param e the event to be processed
@@ -177,7 +179,7 @@ public class GUI extends JFrame {
         String name = JOptionPane.showInputDialog("Enter name");
         if (x == 0) {
             double startMoney = Double.parseDouble(JOptionPane.showInputDialog("Enter starting money"));
-            vendorUser = new Vendor(usernameText.getText(), passwordText.getText(), name, startMoney, new ArrayList<Product>(), new ArrayList<Producer>());
+            vendorUser = new Vendor(usernameText.getText(), passwordText.getText(), name, startMoney);
             Main.vendors.add(vendorUser);
             this.setListData();
             loginScreen.setVisible(false);
@@ -753,6 +755,7 @@ public class GUI extends JFrame {
 
                 //======== vendorOrderPanel ========
                 {
+                    vendorOrderPanel.setVisible(false);
                     vendorOrderPanel.setLayout(new MigLayout(
                         "hidemode 3",
                         // columns

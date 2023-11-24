@@ -14,6 +14,7 @@ public class Save<T> {
      * @param list the list of the data to be saved
      */
     public void save(ArrayList<T> list) {
+        if(list.isEmpty()) return;
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("src/Serialize/" + list.get(0).getClass().getSimpleName() + ".ser"))) {
             oos.writeObject(list);
             System.out.println("Successfully saved!");

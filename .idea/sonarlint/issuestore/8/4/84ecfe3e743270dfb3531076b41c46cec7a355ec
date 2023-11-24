@@ -1,0 +1,20 @@
+
+e
+java:S1192"ODefine a constant instead of duplicating this literal "src/Serialize/" 4 times.(ÊÆÍÉ
+p
+java:S1192"UDefine a constant instead of duplicating this literal "Successfully loaded!" 4 times.(©­²­øÿÿÿÿ
+†
+java:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(ø•å
+…
+java:S1319%"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(•¼¶S
+…
+java:S13193"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(Èó¹k
+†
+java:S1319="pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(´²×Ÿ
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ğÕš’
+U
+java:S1118":Add a private constructor to hide the implicit public one.(Ÿûº²úÿÿÿÿ
+E	java:S106"+Replace this use of System.out by a logger.(©­²­øÿÿÿÿ
+E	java:S106)"+Replace this use of System.out by a logger.(©­²­øÿÿÿÿ
+E	java:S1067"+Replace this use of System.out by a logger.(©­²­øÿÿÿÿ
+E	java:S106A"+Replace this use of System.out by a logger.(©­²­øÿÿÿÿ
