@@ -1,6 +1,7 @@
 package Commerce;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -173,6 +174,10 @@ public class Producer implements Serializable {
      */
     public void setBlackListed(ArrayList<Vendor> blackListed) {
         this.blackListed = blackListed;
+    }
+    public void updateProducerQuantity(LocalDate lastCheck){
+        int days =lastCheck.until(LocalDate.now()).getDays();
+        quantity+=days*dailyProduction;
     }
 
 }

@@ -1,6 +1,7 @@
 package Commerce;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Order implements Serializable {
@@ -8,9 +9,13 @@ public class Order implements Serializable {
     Producer seller;
     Product product;
     int quantity;
+    int deliveredQuantity = 0;
     double totalPrice;
-    Date date;
+    LocalDate date;
+    LocalDate lastCheck;
+    LocalDate deliveryDate;
     int daysToDeliver;
+    boolean delivered = false;
 
     public Order(Vendor buyer, Producer seller, Product product, int quantity) {
         this.buyer = buyer;
@@ -18,16 +23,23 @@ public class Order implements Serializable {
         this.product = product;
         this.quantity = quantity;
         this.totalPrice = quantity * seller.getPrice();
-        this.date = new Date();
+        this.date = LocalDate.now();
+        this.lastCheck = LocalDate.now();
         if(quantity<=seller.getQuantity()){
             seller.setQuantity(seller.getQuantity()-quantity);
+            deliveredQuantity = quantity;
+            buyer.addToProductQuantity(product, quantity);
+            delivered = true;
             daysToDeliver = 0;
         }
         else{
-            daysToDeliver = seller.getQuantity()-quantity;
-            daysToDeliver = daysToDeliver/seller.getDailyProduction()+1;
+            daysToDeliver = quantity-seller.getQuantity();
+            deliveredQuantity = seller.getQuantity();
+            buyer.addToProductQuantity(product, seller.getQuantity());
             seller.setQuantity(0);
+            daysToDeliver = daysToDeliver/seller.getDailyProduction()+1;
         }
+        this.deliveryDate = date.plusDays(daysToDeliver);
     }
 
     public Vendor getBuyer() {
@@ -40,10 +52,6 @@ public class Order implements Serializable {
 
     public Producer getSeller() {
         return seller;
-    }
-
-    public void setSeller(Producer seller) {
-        this.seller = seller;
     }
 
     public Product getProduct() {
@@ -70,8 +78,74 @@ public class Order implements Serializable {
         this.totalPrice = totalPrice;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
+    public LocalDate getDeliveryDate() {
+        return deliveryDate;
+    }
+    public void updateOrder(){
+        int quantityThisCheck;
+        if(delivered||lastCheck.isEqual(LocalDate.now()))
+            return;
+        if(deliveryDate.isAfter(LocalDate.now())){
+            if(quantity<deliveredQuantity+seller.getQuantity()) {
+                quantityThisCheck = quantity - deliveredQuantity;
+                seller.setQuantity(seller.getQuantity()-quantityThisCheck);
+                deliveredQuantity = quantity;
+                buyer.addToProductQuantity(product, quantityThisCheck);
+                delivered = true;
+            }
+            else{
+                deliveredQuantity+=seller.getQuantity();
+                buyer.addToProductQuantity(product, seller.getQuantity());
+                seller.setQuantity(0);
+            }
+        } else if (deliveryDate.isEqual(LocalDate.now())){
+            daysToDeliver = 0;
+            delivered = true;
+        } else if (deliveryDate.isBefore(LocalDate.now())) {
+            if(quantity>deliveredQuantity)
+            {
+                quantityThisCheck = quantity - deliveredQuantity;
+                seller.setQuantity(seller.getQuantity()-quantityThisCheck);
+                deliveredQuantity = quantity;
+                buyer.addToProductQuantity(product, quantityThisCheck);
+                delivered = true;
+            }
+            if(quantity<=deliveredQuantity)
+                delivered = true;
+        }
+        lastCheck = LocalDate.now();
+        daysToDeliver = (quantity-deliveredQuantity)/ seller.getDailyProduction()+1;
+    }
+
+    public int getDeliveredQuantity() {
+        return deliveredQuantity;
+    }
+
+    public void setDeliveredQuantity(int deliveredQuantity) {
+        this.deliveredQuantity = deliveredQuantity;
+    }
+
+    public boolean isDelivered() {
+        return delivered;
+    }
+
+    public void setDelivered(boolean delivered) {
+        this.delivered = delivered;
+    }
+
+    public LocalDate getLastCheck() {
+        return lastCheck;
+    }
+
+    public void setLastCheck(LocalDate lastCheck) {
+        this.lastCheck = lastCheck;
+    }
+
+    public int getDaysToDeliver() {
+        return daysToDeliver;
+    }
 }

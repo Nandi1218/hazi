@@ -1,6 +1,7 @@
 import Commerce.*;
 import Serialize.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Main {
@@ -26,15 +27,20 @@ public class Main {
      * @param args the arguments of the main method
      */
     public static void main(String[] args) {
-        GUI gui = new GUI();
-        gui.setVisible(true);
-    /*
-        for (int i = 0; i < 10; i++) {
-            products.add(new Product("product"+i, "desc"+i));
-            vendors.add(new Vendor("vendorUsername"+i, "vendorPassword"+i, "vendor"+i, i, new ArrayList<Product>(), new ArrayList<Producer>()));
-            producers.add(new Producer("producerUsername"+i,"prodcerPassword"+i,"producer"+i, products.get(i),new ArrayList<Vendor>(), i*1000, i*10, i*100));
-
+        if(!orders.isEmpty())
+            if(!orders.get(0).getLastCheck().isEqual(LocalDate.now())){
+                for (Producer producer : producers) {
+                    producer.updateProducerQuantity(orders.get(0).getLastCheck());
+                }
+                for (Order order : orders) {
+                    order.updateOrder();
+                }
+            }
+        for (Order order :
+                orders) {
+            System.out.println(order.getSeller().getName()+" "+order.getBuyer().getName()+" "+order.getProduct().getName()+" "+order.getQuantity()+" "+order.getTotalPrice()+" "+order.getDate()+" "+order.getDeliveryDate()+"\t "+order.getDaysToDeliver());
         }
+/*
         products.add(new Product("Carrot", "Long orange thingy"));
         products.add(new Product("Apple", "Red and crunchy"));
         products.add(new Product("Banana", "Yellow and sweet"));
@@ -96,9 +102,10 @@ public class Main {
         producers.add(new Producer("freshnessFarms", "passFreshness", "Freshness Farms Ltd.", products.get(18), new ArrayList<>(), 149.99, 30, 200));
         producers.add(new Producer("crispCrops", "passCrispCrops", "Crisp Crops Supply", products.get(0), new ArrayList<>(), 179.99, 35, 230));
         producers.add(new Producer("greenGroves", "passGreenGroves", "Green Groves Agriculture", products.get(19), new ArrayList<>(), 219.99, 27, 220));
+        */
 
+        GUI gui = new GUI();
+        gui.setVisible(true);
 
-
-*/
     }
 }

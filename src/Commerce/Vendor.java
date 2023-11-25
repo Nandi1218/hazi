@@ -2,6 +2,7 @@ package Commerce;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Basic vendor class. Represents a single vendor
@@ -19,6 +20,7 @@ public class Vendor implements Serializable {
     private double money;
     /** The vendor's products*/
     private ArrayList<Product> products;
+    private HashMap<Product, Integer> productQuantity = new HashMap<>();
     /** The vendor's producers*/
     private ArrayList<Producer> producers;
 
@@ -38,6 +40,7 @@ public class Vendor implements Serializable {
         this.money = money;
         this.products = new ArrayList<>();
         this.producers = new ArrayList<>();
+        productQuantity = new HashMap<>();
     }
 
     /** Getter method for the vendor's username
@@ -137,5 +140,14 @@ public class Vendor implements Serializable {
                 ", products=" + products +
                 ", producers=" + producers +
                 '}' + "\n";
+    }
+    public void addToProductQuantity(Product product, int quantity){
+        if (productQuantity.containsKey(product)){
+            productQuantity.put(product, productQuantity.get(product)+quantity);
+        }
+        else{
+            productQuantity.put(product, quantity);
+            products.add(product);
+        }
     }
 }

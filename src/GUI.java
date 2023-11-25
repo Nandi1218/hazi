@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.table.TableRowSorter;
 
 import Commerce.Order;
@@ -10,7 +11,10 @@ import Commerce.Vendor;
 import Commerce.Producer;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import net.miginfocom.swing.*;
+import org.jdesktop.beansbinding.*;
+import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import tableModels.OrderHistoryTableModel;
+import tableModels.VendorOrderModel;
 /*
  * Created by JFormDesigner on Wed Nov 22 09:34:20 CET 2023
  */
@@ -23,8 +27,10 @@ import tableModels.OrderHistoryTableModel;
 
 public class GUI extends JFrame {
     Vendor vendorUser = null;
+    Producer orderProducer = null;
     ArrayList<String> prodList;
     public static final OrderHistoryTableModel dataModel = new OrderHistoryTableModel();
+    public static final VendorOrderModel vendorOrderModel = new VendorOrderModel();
     Producer producerUser = null;
 
     /** Constructor for the GUI class
@@ -36,11 +42,11 @@ public class GUI extends JFrame {
         initComponents();
 
         orderHistoryTable.setModel(dataModel);
+        vendorOrderTable.setModel(vendorOrderModel);
         TableRowSorter<OrderHistoryTableModel> sorter = new TableRowSorter<>(dataModel);
+        TableRowSorter<VendorOrderModel> sorter2 = new TableRowSorter<>(vendorOrderModel);
         orderHistoryTable.setRowSorter(sorter);
-        GUI.dataModel.addOrder(Main.vendors.get(0), Main.producers.get(0), Main.products.get(0), 10);
-        GUI.dataModel.addOrder(Main.vendors.get(1), Main.producers.get(1), Main.products.get(5), 13);
-
+        vendorOrderTable.setRowSorter(sorter2);
         addWindowListener(new WindowAdapter() {
             /** Invoked when a window is in the process of being closed.
              * @param e the event to be processed
@@ -61,7 +67,6 @@ public class GUI extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_MINUS) {
-                    System.out.println("minus");
                     System.out.println(Main.vendors);
                     System.out.println(Main.producers);
                     System.out.println(Main.products);
@@ -109,7 +114,7 @@ public class GUI extends JFrame {
                 for (Producer producer : vendorUser.getProducers()) {
                     prodList.add(producer.getName());
                 }
-                fillVendorProdComboBoxes();
+                try{fillVendorProdComboBoxes();}catch (NullPointerException exception){exception.printStackTrace();}
                 loginScreen.setVisible(false);
                 MainPanel.setVisible(true);
                 vendorMenu.setEnabled(true);
@@ -241,13 +246,29 @@ public class GUI extends JFrame {
      */
     private void VendorOrderMenu(ActionEvent e) {
         setMenuPanelsToFalse();
+        for (Order order : Main.orders) {
+            if(order.getBuyer().getName().equals(vendorUser.getName())) {
+                System.out.println("Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                vendorOrderModel.addOrder(order);
+            }
+        }
+        if(vendorUser.getProducers().isEmpty())
+            orderProducers.setModel(new DefaultComboBoxModel(new String[]{"No producers"}));
+        else {
+            ArrayList<String> producerNames = new ArrayList<>();
+            for (Producer producer : vendorUser.getProducers()) {
+                producerNames.add(producer.getName());
+            }
+            orderProducers.setModel(new DefaultComboBoxModel(producerNames.toArray()));
+        }
         vendorOrderPanel.setVisible(true);
 
     }
+
     /**
      * Fills the vendor producer menu combo boxes
      */
-    public void fillVendorProdComboBoxes(){
+    public void fillVendorProdComboBoxes()throws NullPointerException{
         if(vendorUser.getProducers().isEmpty())
         {
             String[] currentProducers = {"No producers"};
@@ -289,7 +310,8 @@ public class GUI extends JFrame {
     private void vendorProducerMenu(ActionEvent e) {
         setMenuPanelsToFalse();
         vendorProducerPanel.setVisible(true);
-        fillVendorProdComboBoxes();
+
+        try{fillVendorProdComboBoxes();}catch (NullPointerException exception){exception.printStackTrace();}
     }
 
     /**
@@ -329,11 +351,13 @@ public class GUI extends JFrame {
             return;
         vendorProdMenuProdName.setText(producer.getName());
         vendorProdMenuProduct.setText(producer.getProduct().getName());
-        vendorProdMenuAmount.setText(String.valueOf(producer.getDailyProduction()));
+        vendorProdMenuAmount.setText(String.valueOf(producer.getQuantity()));
     }
 
-    /** When the add producer button is pressed
+    /**
+     * When the add producer button is pressed
      * Adds the producer to the vendor's producers
+     *
      * @param e the event to be processed
      */
     private void addProd(ActionEvent e) {
@@ -344,10 +368,12 @@ public class GUI extends JFrame {
                 break;
             }
         }
-        fillVendorProdComboBoxes();
+        try{fillVendorProdComboBoxes();}catch (NullPointerException exception){exception.printStackTrace();}
     }
-    /** When the remove producer button is pressed
+    /**
+     * When the remove producer button is pressed
      * Removes the producer from the vendor's producers
+     *
      * @param e the event to be processed
      */
 
@@ -359,7 +385,7 @@ public class GUI extends JFrame {
                 break;
             }
         }
-        fillVendorProdComboBoxes();
+        try{fillVendorProdComboBoxes();}catch (NullPointerException exception){exception.printStackTrace();}
     }
 
     private void VendorMenuCBCurrent(ActionEvent e) {
@@ -375,12 +401,14 @@ public class GUI extends JFrame {
             return;
         vendorProdMenuProdName.setText(producer.getName());
         vendorProdMenuProduct.setText(producer.getProduct().getName());
-        vendorProdMenuAmount.setText(String.valueOf(producer.getDailyProduction()));
+        vendorProdMenuAmount.setText(String.valueOf(producer.getQuantity()));
     }
 
-    /** When the producer data menu is pressed
+    /**
+     * When the producer data menu is pressed
      * Displays the producer data menu
      * Displays the producer's name, product, product description, product id, price, quantity and daily production
+     *
      * @param e the event to be processed
      */
     private void ProducerDataMenu(ActionEvent e) {
@@ -395,7 +423,8 @@ public class GUI extends JFrame {
         prodPrice.setText(producerUser.getPrice() +"$");
     }
 
-    /** When the edit producer button is pressed
+    /**
+     * When the edit producer button is pressed
      * Asks the user which fields they want to edit
      * If the user chooses to edit the name, asks for the new name and sets it
      * If the user chooses to edit the product, asks for the new product name and description
@@ -403,6 +432,7 @@ public class GUI extends JFrame {
      * If the user chooses to edit the quantity, asks for the new quantity and sets it
      * If the user chooses to edit the daily production, asks for the new daily production and sets it
      * If the user chooses to edit the price, asks for the new price and sets it
+     *
      * @param e the event to be processed
      */
     private void editProd(ActionEvent e) {
@@ -454,9 +484,11 @@ public class GUI extends JFrame {
         checkBoxDProd.setSelected(false);
         checkBoxPrice.setSelected(false);
     }
-    /** When the producer vendors menu is pressed
+    /**
+     * When the producer vendors menu is pressed
      * Displays the producer vendors menu
      * Displays the producer's vendors
+     *
      * @param e the event to be processed
      */
     private void producerVendorsMenu(ActionEvent e) {
@@ -470,9 +502,11 @@ public class GUI extends JFrame {
         producerVendorMenuPanel.setVisible(true);
 
     }
-    /** When the vendor data menu is pressed
+    /**
+     * When the vendor data menu is pressed
      * Displays the vendor data menu
      * Displays the vendor's name, money, products and producers
+     *
      * @param e the event to be processed
      */
     private void vendors(ActionEvent e) {
@@ -487,9 +521,11 @@ public class GUI extends JFrame {
         }
 
     }
-    /** When the vendor data menu is pressed
+    /**
+     * When the vendor data menu is pressed
      * Displays the vendor data menu
      * Displays the vendor's name, money, products and producers
+     *
      * @param e the event to be processed
      */
     private void blackListed(ActionEvent e) {
@@ -516,20 +552,27 @@ public class GUI extends JFrame {
             }
         }
     }
-    /** When the order history menu is pressed
+    /**
+     * When the order history menu is pressed
      * Displays the order history menu
      * Displays the vendor's order history
+     *
      * @param e the event to be processed
      */
     private void miscOrderMenu(ActionEvent e) {
         setMenuPanelsToFalse();
         OrderHistoryMenuPanel.setVisible(true);
+        for (Order order :Main.orders) {
+            dataModel.addOrder(order);
+        }
 
     }
-    /** When the vendor edit button is pressed
+    /**
+     * When the vendor edit button is pressed
      * Asks the user which fields they want to edit
      * If the user chooses to edit the name, asks for the new name and sets it
      * If the user chooses to edit the money, asks for the new amount and sets it
+     *
      * @param e the event to be processed
      */
     private void vendorEdit(ActionEvent e) {
@@ -546,6 +589,46 @@ public class GUI extends JFrame {
         checkBoxVendorName.setSelected(false);
         checkBoxVendorMoney.setSelected(false);
     }
+
+    private void orderProducers(ActionEvent e) {
+
+        for (Producer producer1:Main.producers) {
+            if(producer1.getName().equals(orderProducers.getSelectedItem().toString())){
+                orderProducer = producer1;
+                orderProducerProduct.setText(orderProducer.getProduct().getName());
+                orderAmountSlider.setMaximum(orderProducer.getDailyProduction()*10);
+                orderAmountSlider.setMinimum(1);
+                orderAmountSlider.setValue(orderProducer.getQuantity());
+                System.out.println(orderProducer.getName() + " " + orderProducer.getQuantity());
+                orderAmountTextfield.setText(String.valueOf(orderProducer.getQuantity()));
+                orderProductPrice.setText(orderProducer.getPrice()*Integer.parseInt(orderAmountTextfield.getText()) +"$");
+                break;
+            }
+        }
+    }
+
+    private void order(ActionEvent e) {
+        if(orderProducer == null){
+            JOptionPane.showMessageDialog(null, "Select a producer");
+            return;
+        }
+        int quantity = Integer.parseInt(orderAmountTextfield.getText());
+        if(quantity*orderProducer.getPrice() > vendorUser.getMoney()){
+            JOptionPane.showMessageDialog(null, "Not enough money");
+            return;
+        }
+        Main.orders.add(new Order( vendorUser, orderProducer, orderProducer.getProduct(), quantity));
+        vendorUser.setMoney(vendorUser.getMoney()-quantity*orderProducer.getPrice());
+        vendorOrderModel.addOrder(Main.orders.getLast());
+
+    }
+
+    private void orderAmountSliderStateChanged(ChangeEvent e) {
+        if (orderProducer == null)
+            return;
+        orderProductPrice.setText(String.format("%.2f",orderProducer.getPrice()*Integer.parseInt(orderAmountTextfield.getText())) +"$");
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         panel1 = new JPanel();
@@ -564,8 +647,14 @@ public class GUI extends JFrame {
         logoutButton = new JButton();
         vendorOrderPanel = new JPanel();
         scrollPane2 = new JScrollPane();
-        table1 = new JTable();
-        panel3 = new JPanel();
+        vendorOrderTable = new JTable();
+        orderBottomPanel = new JPanel();
+        orderProducers = new JComboBox();
+        orderProducerProduct = new JLabel();
+        orderProductPrice = new JLabel();
+        orderAmountSlider = new JSlider();
+        orderAmountTextfield = new JTextField();
+        orderButton = new JButton();
         OrderHistoryMenuPanel = new JPanel();
         scrollPane1 = new JScrollPane();
         orderHistoryTable = new JTable();
@@ -664,6 +753,7 @@ public class GUI extends JFrame {
             {
                 MainPanel.setPreferredSize(new Dimension(640, 420));
                 MainPanel.setMinimumSize(new Dimension(640, 350));
+                MainPanel.setMaximumSize(new Dimension(640, 420));
                 MainPanel.setLayout(new MigLayout(
                     "hidemode 3",
                     // columns
@@ -678,6 +768,7 @@ public class GUI extends JFrame {
                     menuBar1.setPreferredSize(new Dimension(640, 30));
                     menuBar1.setMinimumSize(new Dimension(100, 30));
                     menuBar1.setMargin(new Insets(0, 10, 0, 15));
+                    menuBar1.setMaximumSize(new Dimension(640, 32768));
 
                     //======== vendorMenu ========
                     {
@@ -755,6 +846,7 @@ public class GUI extends JFrame {
 
                 //======== vendorOrderPanel ========
                 {
+                    vendorOrderPanel.setMaximumSize(new Dimension(640, 420));
                     vendorOrderPanel.setVisible(false);
                     vendorOrderPanel.setLayout(new MigLayout(
                         "hidemode 3",
@@ -768,42 +860,75 @@ public class GUI extends JFrame {
                     //======== scrollPane2 ========
                     {
                         scrollPane2.setPreferredSize(new Dimension(640, 300));
-                        scrollPane2.setViewportView(table1);
+                        scrollPane2.setViewportView(vendorOrderTable);
                     }
                     vendorOrderPanel.add(scrollPane2, "cell 0 0");
 
-                    //======== panel3 ========
+                    //======== orderBottomPanel ========
                     {
-                        panel3.setPreferredSize(new Dimension(640, 34));
-                        panel3.setLayout(new MigLayout(
+                        orderBottomPanel.setPreferredSize(new Dimension(640, 34));
+                        orderBottomPanel.setLayout(new MigLayout(
                             "hidemode 3",
                             // columns
+                            "[fill]" +
+                            "[fill]" +
+                            "[fill]" +
                             "[fill]" +
                             "[fill]" +
                             "[fill]",
                             // rows
                             "[]"));
+
+                        //---- orderProducers ----
+                        orderProducers.setPreferredSize(new Dimension(120, 26));
+                        orderProducers.addActionListener(e -> orderProducers(e));
+                        orderBottomPanel.add(orderProducers, "cell 0 0");
+
+                        //---- orderProducerProduct ----
+                        orderProducerProduct.setText("prodName");
+                        orderProducerProduct.setPreferredSize(new Dimension(120, 16));
+                        orderProducerProduct.setToolTipText("Product");
+                        orderBottomPanel.add(orderProducerProduct, "cell 1 0");
+
+                        //---- orderProductPrice ----
+                        orderProductPrice.setText("0$");
+                        orderProductPrice.setToolTipText("The amount to be payed");
+                        orderBottomPanel.add(orderProductPrice, "cell 2 0");
+
+                        //---- orderAmountSlider ----
+                        orderAmountSlider.setMaximum(1000);
+                        orderAmountSlider.setToolTipText("maximum order = on stock * 3");
+                        orderAmountSlider.addChangeListener(e -> orderAmountSliderStateChanged(e));
+                        orderBottomPanel.add(orderAmountSlider, "cell 3 0");
+
+                        //---- orderAmountTextfield ----
+                        orderAmountTextfield.setPreferredSize(new Dimension(40, 26));
+                        orderAmountTextfield.setToolTipText("precise order or more than max order");
+                        orderBottomPanel.add(orderAmountTextfield, "cell 4 0");
+
+                        //---- orderButton ----
+                        orderButton.setText("Order");
+                        orderButton.addActionListener(e -> order(e));
+                        orderBottomPanel.add(orderButton, "cell 5 0");
                     }
-                    vendorOrderPanel.add(panel3, "cell 0 1");
+                    vendorOrderPanel.add(orderBottomPanel, "cell 0 1");
                 }
                 MainPanel.add(vendorOrderPanel, "cell 0 1");
 
                 //======== OrderHistoryMenuPanel ========
                 {
-                    OrderHistoryMenuPanel.setVisible(false);
+                    OrderHistoryMenuPanel.setMaximumSize(new Dimension(640, 420));
+                    OrderHistoryMenuPanel.setMinimumSize(new Dimension(600, 300));
                     OrderHistoryMenuPanel.setLayout(new MigLayout(
                         "hidemode 3",
                         // columns
                         "10[fill]10",
                         // rows
-                        "5[]5"));
+                        "0[]0"));
 
                     //======== scrollPane1 ========
                     {
-                        scrollPane1.setPreferredSize(new Dimension(640, 427));
-
-                        //---- orderHistoryTable ----
-                        orderHistoryTable.setPreferredSize(new Dimension(640, 40));
+                        scrollPane1.setPreferredSize(new Dimension(640, 100));
                         scrollPane1.setViewportView(orderHistoryTable);
                     }
                     OrderHistoryMenuPanel.add(scrollPane1, "cell 0 0");
@@ -813,6 +938,7 @@ public class GUI extends JFrame {
                 //======== producerVendorMenuPanel ========
                 {
                     producerVendorMenuPanel.setVisible(false);
+                    producerVendorMenuPanel.setMaximumSize(new Dimension(640, 420));
                     producerVendorMenuPanel.setLayout(new MigLayout(
                         "hidemode 3,alignx left",
                         // columns
@@ -864,6 +990,7 @@ public class GUI extends JFrame {
                     prodDataMenuPanel.setPreferredSize(new Dimension(640, 420));
                     prodDataMenuPanel.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 22));
                     prodDataMenuPanel.setVisible(false);
+                    prodDataMenuPanel.setMaximumSize(new Dimension(640, 420));
                     prodDataMenuPanel.setLayout(new MigLayout(
                         "hidemode 3,aligny center",
                         // columns
@@ -956,6 +1083,7 @@ public class GUI extends JFrame {
                 {
                     vendorProducerPanel.setPreferredSize(new Dimension(640, 390));
                     vendorProducerPanel.setVisible(false);
+                    vendorProducerPanel.setMaximumSize(new Dimension(640, 420));
                     vendorProducerPanel.setLayout(new MigLayout(
                         "fillx,hidemode 3,aligny center",
                         // columns
@@ -1040,6 +1168,7 @@ public class GUI extends JFrame {
                 {
                     vendorDataMenuPanel.setMinimumSize(new Dimension(640, 200));
                     vendorDataMenuPanel.setVisible(false);
+                    vendorDataMenuPanel.setMaximumSize(new Dimension(640, 420));
                     vendorDataMenuPanel.setLayout(new MigLayout(
                         "hidemode 3",
                         // columns
@@ -1221,6 +1350,13 @@ public class GUI extends JFrame {
         contentPane.add(panel1);
         pack();
         setLocationRelativeTo(getOwner());
+
+        //---- bindings ----
+        bindingGroup = new BindingGroup();
+        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            orderAmountSlider, BeanProperty.create("value"),
+            orderAmountTextfield, BeanProperty.create("text")));
+        bindingGroup.bind();
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -1241,8 +1377,14 @@ public class GUI extends JFrame {
     private JButton logoutButton;
     private JPanel vendorOrderPanel;
     private JScrollPane scrollPane2;
-    private JTable table1;
-    private JPanel panel3;
+    private JTable vendorOrderTable;
+    private JPanel orderBottomPanel;
+    private JComboBox orderProducers;
+    private JLabel orderProducerProduct;
+    private JLabel orderProductPrice;
+    private JSlider orderAmountSlider;
+    private JTextField orderAmountTextfield;
+    private JButton orderButton;
     private JPanel OrderHistoryMenuPanel;
     private JScrollPane scrollPane1;
     private JTable orderHistoryTable;
@@ -1309,5 +1451,6 @@ public class GUI extends JFrame {
     private JPanel panel2;
     private JButton loginButton;
     private JButton registerButton;
+    private BindingGroup bindingGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

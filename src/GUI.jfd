@@ -31,11 +31,13 @@ new FormModel {
 					name: "MainPanel"
 					"preferredSize": new java.awt.Dimension( 640, 420 )
 					"minimumSize": new java.awt.Dimension( 640, 350 )
+					"maximumSize": new java.awt.Dimension( 640, 420 )
 					add( new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 						name: "menuBar1"
 						"preferredSize": new java.awt.Dimension( 640, 30 )
 						"minimumSize": new java.awt.Dimension( 100, 30 )
 						"margin": new java.awt.Insets( 0, 10, 0, 15 )
+						"maximumSize": new java.awt.Dimension( 640, 32768 )
 						add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 							name: "vendorMenu"
 							"text": "Vendor"
@@ -111,23 +113,68 @@ new FormModel {
 						"$rowConstraints": "[][][]"
 					} ) {
 						name: "vendorOrderPanel"
+						"maximumSize": new java.awt.Dimension( 640, 420 )
 						"visible": false
 						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 							name: "scrollPane2"
 							"preferredSize": new java.awt.Dimension( 640, 300 )
 							add( new FormComponent( "javax.swing.JTable" ) {
-								name: "table1"
+								name: "vendorOrderTable"
 							} )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 0"
 						} )
 						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 							"$layoutConstraints": "hidemode 3"
-							"$columnConstraints": "[fill][fill][fill]"
+							"$columnConstraints": "[fill][fill][fill][fill][fill][fill]"
 							"$rowConstraints": "[]"
 						} ) {
-							name: "panel3"
+							name: "orderBottomPanel"
 							"preferredSize": new java.awt.Dimension( 640, 34 )
+							add( new FormComponent( "javax.swing.JComboBox" ) {
+								name: "orderProducers"
+								"preferredSize": new java.awt.Dimension( 120, 26 )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "orderProducers", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 0"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "orderProducerProduct"
+								"text": "prodName"
+								"preferredSize": new java.awt.Dimension( 120, 16 )
+								"toolTipText": "Product"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 1 0"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "orderProductPrice"
+								"text": "0$"
+								"toolTipText": "The amount to be payed"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 2 0"
+							} )
+							add( new FormComponent( "javax.swing.JSlider" ) {
+								name: "orderAmountSlider"
+								"maximum": 1000
+								"toolTipText": "maximum order = on stock * 3"
+								addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "orderAmountSliderStateChanged", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 3 0"
+							} )
+							add( new FormComponent( "javax.swing.JTextField" ) {
+								name: "orderAmountTextfield"
+								"preferredSize": new java.awt.Dimension( 40, 26 )
+								"toolTipText": "precise order or more than max order"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 4 0"
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "orderButton"
+								"text": "Order"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "order", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 5 0"
+							} )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 1"
 						} )
@@ -137,16 +184,16 @@ new FormModel {
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 						"$layoutConstraints": "hidemode 3"
 						"$columnConstraints": "10[fill]10"
-						"$rowConstraints": "5[]5"
+						"$rowConstraints": "0[]0"
 					} ) {
 						name: "OrderHistoryMenuPanel"
-						"visible": false
+						"maximumSize": new java.awt.Dimension( 640, 420 )
+						"minimumSize": new java.awt.Dimension( 600, 300 )
 						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 							name: "scrollPane1"
-							"preferredSize": new java.awt.Dimension( 640, 427 )
+							"preferredSize": new java.awt.Dimension( 640, 100 )
 							add( new FormComponent( "javax.swing.JTable" ) {
 								name: "orderHistoryTable"
-								"preferredSize": new java.awt.Dimension( 640, 40 )
 							} )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 0"
@@ -161,6 +208,7 @@ new FormModel {
 					} ) {
 						name: "producerVendorMenuPanel"
 						"visible": false
+						"maximumSize": new java.awt.Dimension( 640, 420 )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label22"
 							"text": "Name:"
@@ -219,6 +267,7 @@ new FormModel {
 						"preferredSize": new java.awt.Dimension( 640, 420 )
 						"font": new java.awt.Font( "JetBrains Mono Light", 0, 22 )
 						"visible": false
+						"maximumSize": new java.awt.Dimension( 640, 420 )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "name"
 							"text": "Name:"
@@ -346,6 +395,7 @@ new FormModel {
 						name: "vendorProducerPanel"
 						"preferredSize": new java.awt.Dimension( 640, 390 )
 						"visible": false
+						"maximumSize": new java.awt.Dimension( 640, 420 )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label9"
 							"text": "Name:"
@@ -446,6 +496,7 @@ new FormModel {
 						name: "vendorDataMenuPanel"
 						"minimumSize": new java.awt.Dimension( 640, 200 )
 						"visible": false
+						"maximumSize": new java.awt.Dimension( 640, 420 )
 						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 							"$columnConstraints": "30[fill]0[430,right]"
 							"$rowConstraints": "[200]0[322]0"
@@ -633,6 +684,10 @@ new FormModel {
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 640, 420 )
+		} )
+		addBindingGroup( new FormBindingGroup( class org.jdesktop.beansbinding.BindingGroup ) {
+			"name": "bindingGroup"
+			addBinding( new FormBinding( "orderAmountSlider", "value", "orderAmountTextfield", "text" ) )
 		} )
 	}
 }

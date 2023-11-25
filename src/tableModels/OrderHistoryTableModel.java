@@ -1,11 +1,9 @@
 package tableModels;
 
 import Commerce.Order;
-import Commerce.Producer;
-import Commerce.Product;
-import Commerce.Vendor;
 
 import javax.swing.table.AbstractTableModel;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +18,7 @@ public class OrderHistoryTableModel extends AbstractTableModel{
 
         @Override
         public int getColumnCount() {
-            return 5;
+            return 6;
         }
 
         @Override
@@ -56,12 +54,16 @@ public class OrderHistoryTableModel extends AbstractTableModel{
                 case 0, 1, 2 -> String.class;
                 case 3 -> Integer.class;
                 case 4 -> Double.class;
-                case 5 -> java.util.Date.class;
+                case 5 -> LocalDate.class;
                 default -> null;
             };
         }
-        public void addOrder(Vendor vendor, Producer producer, Product product, int quantity) {
-            orders.add(new Order(vendor, producer,product, quantity));
-            fireTableRowsInserted(orders.size() - 1, orders.size() - 1);
+        public void addOrder(Order order){
+            if(orders.contains(order))
+                return;
+            orders.add(order);
+            fireTableRowsInserted(orders.size()-1, orders.size() -1);
+            System.out.println("Added "+orders.size());
         }
+
 }
