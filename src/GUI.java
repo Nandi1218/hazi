@@ -124,11 +124,11 @@ public class GUI extends JFrame {
         if(usernameText.getText().equals("admin")&&passwordText.getText().equals("admin")){
             loginScreen.setVisible(false);
             MainPanel.setVisible(true);
+            setMenuPanelsToFalse();
             vendorMenu.setVisible(false);
             producerMenu.setVisible(false);
             adminMenu.setEnabled(true);
             adminMenu.setVisible(true);
-            setMenuPanelsToFalse();
             return;
         }else adminMenu.setVisible(false);
         if(usernameText.getText().isEmpty() || passwordText.getText().isEmpty()){
@@ -197,6 +197,8 @@ public class GUI extends JFrame {
      * @param e the event to be processed
      */
     private void registerButton(ActionEvent e) {
+        if(usernameText.getText().equals("admin"))
+            return;
         if(usernameText.getText().isEmpty() || passwordText.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Username or password is empty");
             return;
@@ -229,6 +231,8 @@ public class GUI extends JFrame {
             MainPanel.setVisible(true);
             producerMenu.setEnabled(false);
             vendorMenu.setEnabled(true);
+            producerMenu.setVisible(true);
+            vendorMenu.setVisible(true);
         } else {
             String productName = JOptionPane.showInputDialog("Enter product name");
             Product prod = null;
@@ -251,6 +255,8 @@ public class GUI extends JFrame {
             MainPanel.setVisible(true);
             vendorMenu.setEnabled(false);
             producerMenu.setEnabled(true);
+            producerMenu.setVisible(true);
+            vendorMenu.setVisible(true);
 
         }
 
@@ -263,10 +269,11 @@ public class GUI extends JFrame {
      * @param e the event to be processed
      */
     private void logout(ActionEvent e) {
+        setMenuPanelsToFalse();
+        vendorMenu.setVisible(true);
+        producerMenu.setVisible(true);
         loginScreen.setVisible(true);
         MainPanel.setVisible(false);
-        vendorMenu.setEnabled(false);
-        producerMenu.setEnabled(false);
         passwordText.setText("");
         usernameText.setText("");
         System.out.println(prodList);
@@ -707,6 +714,7 @@ public class GUI extends JFrame {
      */
     private void adminVendors(ActionEvent e) {
         setMenuPanelsToFalse();
+
         adminVendorPanel.setVisible(true);
     }
 
