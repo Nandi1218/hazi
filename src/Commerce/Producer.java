@@ -17,6 +17,7 @@ public class Producer implements Serializable {
     private double price;
     private int dailyProduction;
     private int quantity;
+
     /**
      * Constructor for the class Producer
      *
@@ -40,92 +41,114 @@ public class Producer implements Serializable {
     }
 
 
-
-
     /**
      * getter method for the producer's name
+     *
      * @return the producer's name
      */
     public String getName() {
         return name;
     }
+
     /**
      * setter method for the producer's name
+     *
      * @param name the new name
      */
     public void setName(String name) {
         this.name = name;
     }
+
     /**
      * getter method for the product
+     *
      * @return the product
      */
     public Product getProduct() {
         return product;
     }
+
     /**
      * setter method for the product
+     *
      * @param product the new product
      */
     public void setProduct(Product product) {
         this.product = product;
     }
+
     /**
      * getter method for the product's price
+     *
      * @return the product's price
      */
     public double getPrice() {
         return price;
     }
+
     /**
      * setter method for the product's price
+     *
      * @param price the new price
      */
     public void setPrice(double price) {
         this.price = price;
     }
+
     /**
      * getter method for the daily production
+     *
      * @return the daily production
      */
     public int getDailyProduction() {
         return dailyProduction;
     }
+
     /**
      * setter method for the daily production
+     *
      * @param dailyProduction the new daily production
      */
     public void setDailyProduction(int dailyProduction) {
         this.dailyProduction = dailyProduction;
     }
+
     /**
      * getter method for the producer's current quantity
+     *
      * @return the producer's current quantity
      */
     public int getQuantity() {
         return quantity;
     }
+
     /**
      * setter method for the quantity
+     *
      * @param quantity the new quantity
      */
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
     /**
      * getter method for the producer's username
+     *
      * @return the producer's username
      */
     public String getUsername() {
         return username;
     }
+
     /**
      * setter method for the producer's username
+     *
      * @param username the new username
      */
     public void setUsername(String username) {
         this.username = username;
     }
+
     /**
      * getter method for the producer's password
      *
@@ -134,6 +157,7 @@ public class Producer implements Serializable {
     public String getPassword() {
         return password;
     }
+
     /**
      * setter method for the producer's password
      *
@@ -142,6 +166,7 @@ public class Producer implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
     /**
      * toString method for the producer
      *
@@ -157,8 +182,9 @@ public class Producer implements Serializable {
                 ", price=" + price +
                 ", dailyProduction=" + dailyProduction +
                 ", quantity=" + quantity +
-                '}' + '\n'  ;
+                '}' + '\n';
     }
+
     /**
      * getter method for the producer's preferred vendors
      *
@@ -167,6 +193,7 @@ public class Producer implements Serializable {
     public ArrayList<Vendor> getBlackListed() {
         return blackListed;
     }
+
     /**
      * setter method for the producer's preferred vendors
      *
@@ -175,9 +202,10 @@ public class Producer implements Serializable {
     public void setBlackListed(ArrayList<Vendor> blackListed) {
         this.blackListed = blackListed;
     }
-    public void updateProducerQuantity(LocalDate lastCheck){
-        int days =lastCheck.until(LocalDate.now()).getDays();
-        quantity+=days*dailyProduction;
+
+    public void updateProducerQuantity(LocalDate lastCheck) {
+        int days = lastCheck.until(LocalDate.now()).getDays();
+        quantity += days * dailyProduction;
     }
 
 }

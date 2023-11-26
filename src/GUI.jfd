@@ -38,6 +38,7 @@ new FormModel {
 						"minimumSize": new java.awt.Dimension( 100, 30 )
 						"margin": new java.awt.Insets( 0, 10, 0, 15 )
 						"maximumSize": new java.awt.Dimension( 640, 32768 )
+						"font": new java.awt.Font( "JetBrains Mono Light", 0, 12 )
 						add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 							name: "vendorMenu"
 							"text": "Vendor"
@@ -89,6 +90,25 @@ new FormModel {
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "miscOrderMenu", true ) )
 							} )
 						} )
+						add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+							name: "adminMenu"
+							"text": "Admin"
+							add( new FormComponent( "javax.swing.JMenuItem" ) {
+								name: "adminVendors"
+								"text": "Vendors"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "adminVendors", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JMenuItem" ) {
+								name: "adminProducersMenu"
+								"text": "Producers"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "adminProducersMenu", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JMenuItem" ) {
+								name: "adminProductsMenu"
+								"text": "Products"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "adminProductsMenu", true ) )
+							} )
+						} )
 						add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
 							name: "hSpacer1"
 							"opaque": false
@@ -109,6 +129,99 @@ new FormModel {
 					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 						"$layoutConstraints": "hidemode 3"
+						"$columnConstraints": "[395,fill][169,fill]"
+						"$rowConstraints": "[330]"
+					} ) {
+						name: "adminProductPanel"
+						"preferredSize": new java.awt.Dimension( 640, 390 )
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane5"
+							add( new FormComponent( "javax.swing.JTable" ) {
+								name: "adminProductTable"
+							} )
+						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+							"value": "cell 0 0"
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+							"$layoutConstraints": "hidemode 3"
+							"$columnConstraints": "[156,fill]"
+							"$rowConstraints": "[top][][][]"
+						} ) {
+							name: "panel3"
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "adminAddProduct"
+								"text": "Add"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "adminAddProduct", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 1"
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "adminRemoveProduct"
+								"text": "Remove"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "adminRemoveProduct", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 2"
+							} )
+						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+							"value": "cell 1 0"
+						} )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 1"
+					} )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+						"$layoutConstraints": "hidemode 3"
+						"$columnConstraints": "[451,fill][142,fill]"
+						"$rowConstraints": "[][][]"
+					} ) {
+						name: "adminVendorPanel"
+						"preferredSize": new java.awt.Dimension( 640, 390 )
+						"visible": false
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane3"
+							add( new FormComponent( "javax.swing.JTable" ) {
+								name: "vendorAdminTable"
+							} )
+						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+							"value": "cell 0 0"
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "removeVendorButton"
+							"text": "Remove"
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "removeVendor", true ) )
+						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+							"value": "cell 1 0"
+						} )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 1"
+					} )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+						"$layoutConstraints": "hidemode 3"
+						"$columnConstraints": "[425,fill][190,fill]"
+						"$rowConstraints": "[330][][]"
+					} ) {
+						name: "adminProducersPanel"
+						"preferredSize": new java.awt.Dimension( 640, 390 )
+						"visible": false
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane4"
+							add( new FormComponent( "javax.swing.JTable" ) {
+								name: "adminProducerTable"
+							} )
+						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+							"value": "cell 0 0"
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "removeProducerButton"
+							"text": "Remove"
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "removeProducer", true ) )
+						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+							"value": "cell 1 0"
+						} )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 1"
+					} )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+						"$layoutConstraints": "hidemode 3"
 						"$columnConstraints": "[fill]"
 						"$rowConstraints": "[][][]"
 					} ) {
@@ -120,6 +233,7 @@ new FormModel {
 							"preferredSize": new java.awt.Dimension( 640, 300 )
 							add( new FormComponent( "javax.swing.JTable" ) {
 								name: "vendorOrderTable"
+								"font": new java.awt.Font( "JetBrains Mono Light", 0, 12 )
 							} )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 0"
@@ -134,6 +248,7 @@ new FormModel {
 							add( new FormComponent( "javax.swing.JComboBox" ) {
 								name: "orderProducers"
 								"preferredSize": new java.awt.Dimension( 120, 26 )
+								"font": &Font0 new java.awt.Font( "JetBrains Mono Light", 0, 12 )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "orderProducers", true ) )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 0 0"
@@ -143,6 +258,7 @@ new FormModel {
 								"text": "prodName"
 								"preferredSize": new java.awt.Dimension( 120, 16 )
 								"toolTipText": "Product"
+								"font": #Font0
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 1 0"
 							} )
@@ -150,6 +266,7 @@ new FormModel {
 								name: "orderProductPrice"
 								"text": "0$"
 								"toolTipText": "The amount to be payed"
+								"font": #Font0
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 2 0"
 							} )
@@ -157,6 +274,7 @@ new FormModel {
 								name: "orderAmountSlider"
 								"maximum": 1000
 								"toolTipText": "maximum order = on stock * 3"
+								"font": #Font0
 								addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "orderAmountSliderStateChanged", true ) )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 3 0"
@@ -165,12 +283,14 @@ new FormModel {
 								name: "orderAmountTextfield"
 								"preferredSize": new java.awt.Dimension( 40, 26 )
 								"toolTipText": "precise order or more than max order"
+								"font": #Font0
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 4 0"
 							} )
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "orderButton"
 								"text": "Order"
+								"font": #Font0
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "order", true ) )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 5 0"
@@ -184,16 +304,19 @@ new FormModel {
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 						"$layoutConstraints": "hidemode 3"
 						"$columnConstraints": "10[fill]10"
-						"$rowConstraints": "0[]0"
+						"$rowConstraints": "0[fill]0"
 					} ) {
 						name: "OrderHistoryMenuPanel"
 						"maximumSize": new java.awt.Dimension( 640, 420 )
 						"minimumSize": new java.awt.Dimension( 600, 300 )
+						"visible": false
 						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 							name: "scrollPane1"
-							"preferredSize": new java.awt.Dimension( 640, 100 )
+							"preferredSize": new java.awt.Dimension( 640, 390 )
 							add( new FormComponent( "javax.swing.JTable" ) {
 								name: "orderHistoryTable"
+								"preferredSize": new java.awt.Dimension( 390, 300 )
+								"font": new java.awt.Font( "JetBrains Mono Light", 0, 12 )
 							} )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 0"
@@ -213,7 +336,7 @@ new FormModel {
 							name: "label22"
 							"text": "Name:"
 							"preferredSize": new java.awt.Dimension( 100, 16 )
-							"font": &Font0 new java.awt.Font( "JetBrains Mono SemiBold", 0, 22 )
+							"font": &Font1 new java.awt.Font( "JetBrains Mono SemiBold", 0, 22 )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 0,alignx left,growx 0"
 						} )
@@ -236,7 +359,7 @@ new FormModel {
 							name: "label24"
 							"text": "Blacklisted:"
 							"preferredSize": new java.awt.Dimension( 160, 16 )
-							"font": #Font0
+							"font": #Font1
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 1,alignx left,growx 0"
 						} )
@@ -278,7 +401,7 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "producerName"
 							"text": "prodName"
-							"font": &Font1 new java.awt.Font( "JetBrains Mono Light", 0, 18 )
+							"font": &Font2 new java.awt.Font( "JetBrains Mono Light", 0, 18 )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 1 0"
 						} )
@@ -290,28 +413,28 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label14"
 							"text": "Product:"
-							"font": &Font2 new java.awt.Font( "JetBrains Mono SemiBold", 0, 22 )
+							"font": &Font3 new java.awt.Font( "JetBrains Mono SemiBold", 0, 22 )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 1"
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "producerProdName"
 							"text": "name"
-							"font": #Font1
+							"font": #Font2
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 1 1"
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "producerProdDesc"
 							"text": "descr"
-							"font": #Font1
+							"font": #Font2
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 2 1"
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "producerProdId"
 							"text": "id"
-							"font": #Font1
+							"font": #Font2
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 3 1"
 						} )
@@ -342,14 +465,14 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label18"
 							"text": "Quantity:"
-							"font": #Font2
+							"font": #Font3
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 3"
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "producerQantity"
 							"text": "qan"
-							"font": #Font1
+							"font": #Font2
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 1 3"
 						} )
@@ -361,14 +484,14 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label19"
 							"text": "Daily Production:"
-							"font": #Font2
+							"font": #Font3
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 4"
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "producerDailyProd"
 							"text": "daily"
-							"font": #Font1
+							"font": #Font2
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 1 4"
 						} )
@@ -394,18 +517,18 @@ new FormModel {
 					} ) {
 						name: "vendorProducerPanel"
 						"preferredSize": new java.awt.Dimension( 640, 390 )
-						"visible": false
 						"maximumSize": new java.awt.Dimension( 640, 420 )
+						"visible": false
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label9"
 							"text": "Name:"
-							"font": &Font3 new java.awt.Font( "JetBrains Mono Light", 0, 22 )
+							"font": &Font4 new java.awt.Font( "JetBrains Mono Light", 0, 22 )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 0"
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "vendorProdMenuProdName"
-							"font": #Font3
+							"font": #Font4
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 1 0"
 						} )
@@ -413,20 +536,20 @@ new FormModel {
 							name: "label12"
 							"text": "Available Producers:"
 							"preferredSize": new java.awt.Dimension( 120, 16 )
-							"font": &Font4 new java.awt.Font( "JetBrains Mono Light", 0, 22 )
+							"font": &Font5 new java.awt.Font( "JetBrains Mono Light", 0, 22 )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 2 0"
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label5"
 							"text": "Produces:"
-							"font": #Font3
+							"font": #Font4
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 1"
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "vendorProdMenuProduct"
-							"font": #Font3
+							"font": #Font4
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 1 1"
 						} )
@@ -434,7 +557,7 @@ new FormModel {
 							name: "addProd"
 							"text": "Add"
 							"preferredSize": new java.awt.Dimension( 100, 30 )
-							"font": &Font5 new java.awt.Font( "JetBrains Mono SemiBold", 0, 16 )
+							"font": &Font6 new java.awt.Font( "JetBrains Mono SemiBold", 0, 16 )
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addProd", true ) )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 2 1"
@@ -442,7 +565,7 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JComboBox" ) {
 							name: "vendorMenuCB"
 							"preferredSize": new java.awt.Dimension( 180, 26 )
-							"font": &Font6 new java.awt.Font( "JetBrains Mono Light", 0, 16 )
+							"font": &Font7 new java.awt.Font( "JetBrains Mono Light", 0, 16 )
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "vendorMenuCB", true ) )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 2 1"
@@ -450,13 +573,13 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label10"
 							"text": "Quantity:"
-							"font": #Font3
+							"font": #Font4
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 2"
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "vendorProdMenuAmount"
-							"font": #Font3
+							"font": #Font4
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 1 2"
 						} )
@@ -464,7 +587,7 @@ new FormModel {
 							name: "label13"
 							"text": "Current Producers:"
 							"preferredSize": new java.awt.Dimension( 120, 16 )
-							"font": #Font4
+							"font": #Font5
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 2 2"
 						} )
@@ -472,7 +595,7 @@ new FormModel {
 							name: "removeProd"
 							"text": "Remove"
 							"preferredSize": new java.awt.Dimension( 100, 30 )
-							"font": #Font5
+							"font": #Font6
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "removeProd", true ) )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 2 3"
@@ -480,7 +603,7 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JComboBox" ) {
 							name: "VendorMenuCBCurrent"
 							"preferredSize": new java.awt.Dimension( 180, 26 )
-							"font": #Font6
+							"font": #Font7
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "VendorMenuCBCurrent", true ) )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 2 3"
@@ -495,8 +618,8 @@ new FormModel {
 					} ) {
 						name: "vendorDataMenuPanel"
 						"minimumSize": new java.awt.Dimension( 640, 200 )
-						"visible": false
 						"maximumSize": new java.awt.Dimension( 640, 420 )
+						"visible": false
 						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 							"$columnConstraints": "30[fill]0[430,right]"
 							"$rowConstraints": "[200]0[322]0"
@@ -539,6 +662,7 @@ new FormModel {
 									"text": "name"
 									"font": new java.awt.Font( "JetBrains Mono ExtraLight", 0, 22 )
 									"horizontalAlignment": 4
+									"maximumSize": new java.awt.Dimension( 80, 30 )
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 									"value": "cell 1 0"
 								} )

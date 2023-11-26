@@ -19,13 +19,14 @@ public class Load {
      * @return an ArrayList of the loaded data
      * @see Save
      */
-    public static ArrayList<Vendor> loadVendor() {
+    public static ArrayList<Vendor> loadVendor(String filename) {
         ArrayList<Vendor> vendors = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("src/Serialize/" + "Vendor.ser"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
             vendors = (ArrayList<Vendor>) ois.readObject();
-            System.out.println("Successfully loaded!");
+            System.out.println("Successfully loaded \t " + filename +"!");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            System.out.println("Failed to load. File not found or corrupted.");
         }
         return vendors;
     }
@@ -34,13 +35,14 @@ public class Load {
      * @return an ArrayList of the loaded data
      * @see Save
      */
-    public static ArrayList<Producer> loadProducer() {
+    public static ArrayList<Producer> loadProducer(String filename) {
         ArrayList<Producer> producers = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("src/Serialize/" + "Producer.ser"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
             producers = (ArrayList<Producer>) ois.readObject();
-            System.out.println("Successfully loaded!");
+            System.out.println("Successfully loaded \t " + filename +"!");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            System.out.println("Failed to load. File not found or corrupted.");
         }
         return producers;
     }
@@ -48,23 +50,28 @@ public class Load {
     /** Method that loads the Product data from the serialized file
      * @return an ArrayList of the loaded data
      */
-    public static ArrayList<Product> loadProduct() {
+    public static ArrayList<Product> loadProduct(String filename) {
         ArrayList<Product> products = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("src/Serialize/" + "Product.ser"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
             products = (ArrayList<Product>) ois.readObject();
-            System.out.println("Successfully loaded!");
+            System.out.println("Successfully loaded \t " + filename +"!");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            System.out.println("Failed to load. File not found or corrupted.");
         }
         return products;
     }
-    public static ArrayList<Commerce.Order> loadOrder() {
+    /** Method that loads the Order data from the serialized file
+     * @return an ArrayList of the loaded data
+     */
+    public static ArrayList<Commerce.Order> loadOrder(String filename) {
         ArrayList<Commerce.Order> orders = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("src/Serialize/" + "Order.ser"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
             orders = (ArrayList<Commerce.Order>) ois.readObject();
-            System.out.println("Successfully loaded!");
+            System.out.println("Successfully loaded \t " + filename +"!");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            System.out.println("Failed to load. File not found or corrupted.");
         }
         return orders;
     }

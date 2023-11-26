@@ -14,19 +14,21 @@ public class Main {
     /** The save object for the Order class*/
     public static Save<Order> saveOrder = new Save<>();
     /** The list of all the products*/
-    public static ArrayList<Product> products =Load.loadProduct();
+    public static ArrayList<Product> products =Load.loadProduct("src/Serialize/Product.ser");
     /** The list of all the vendors*/
-    public static ArrayList<Vendor> vendors =Load.loadVendor();
+    public static ArrayList<Vendor> vendors =Load.loadVendor("src/Serialize/Vendor.ser");
     /** The list of all the producers*/
-    public static ArrayList<Producer> producers =Load.loadProducer();
+    public static ArrayList<Producer> producers =Load.loadProducer("src/Serialize/Producer.ser");
+    public static GUI gui = new GUI();
     /** The list of all the orders*/
-    public static ArrayList<Order> orders =Load.loadOrder();
+    public static ArrayList<Order> orders =Load.loadOrder("src/Serialize/Order.ser");
     /**
      * The main method of the program
      * Creates the GUI object and makes it visible
      * @param args the arguments of the main method
      */
     public static void main(String[] args) {
+        products.removeIf(product -> product.getName().equals("car"));
         if(!orders.isEmpty())
             if(!orders.get(0).getLastCheck().isEqual(LocalDate.now())){
                 for (Producer producer : producers) {
@@ -36,10 +38,6 @@ public class Main {
                     order.updateOrder();
                 }
             }
-        for (Order order :
-                orders) {
-            System.out.println(order.getSeller().getName()+" "+order.getBuyer().getName()+" "+order.getProduct().getName()+" "+order.getQuantity()+" "+order.getTotalPrice()+" "+order.getDate()+" "+order.getDeliveryDate()+"\t "+order.getDaysToDeliver());
-        }
 /*
         products.add(new Product("Carrot", "Long orange thingy"));
         products.add(new Product("Apple", "Red and crunchy"));
@@ -104,8 +102,8 @@ public class Main {
         producers.add(new Producer("greenGroves", "passGreenGroves", "Green Groves Agriculture", products.get(19), new ArrayList<>(), 219.99, 27, 220));
         */
 
-        GUI gui = new GUI();
-        gui.setVisible(true);
+
+        Main.gui.setVisible(true);
 
     }
 }

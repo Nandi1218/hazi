@@ -13,8 +13,8 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import net.miginfocom.swing.*;
 import org.jdesktop.beansbinding.*;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
-import tableModels.OrderHistoryTableModel;
-import tableModels.VendorOrderModel;
+import tableModels.*;
+
 /*
  * Created by JFormDesigner on Wed Nov 22 09:34:20 CET 2023
  */
@@ -31,6 +31,9 @@ public class GUI extends JFrame {
     ArrayList<String> prodList;
     public static final OrderHistoryTableModel dataModel = new OrderHistoryTableModel();
     public static final VendorOrderModel vendorOrderModel = new VendorOrderModel();
+    public static final VendorTableModel vendorTableModel = new VendorTableModel(Main.vendors);
+    public static final ProducerTableModel producerTableModel = new ProducerTableModel(Main.producers);
+    public static final ProductTableModel productTableModel = new ProductTableModel(Main.products);
     Producer producerUser = null;
 
     /** Constructor for the GUI class
@@ -43,25 +46,37 @@ public class GUI extends JFrame {
 
         orderHistoryTable.setModel(dataModel);
         vendorOrderTable.setModel(vendorOrderModel);
+        vendorAdminTable.setModel(vendorTableModel);
+        adminProducerTable.setModel(producerTableModel);
+        adminProductTable.setModel(productTableModel);
         TableRowSorter<OrderHistoryTableModel> sorter = new TableRowSorter<>(dataModel);
         TableRowSorter<VendorOrderModel> sorter2 = new TableRowSorter<>(vendorOrderModel);
+        TableRowSorter<VendorTableModel> sorter3 = new TableRowSorter<>(vendorTableModel);
+        TableRowSorter<ProducerTableModel> sorter4 = new TableRowSorter<>(producerTableModel);
+        TableRowSorter<ProductTableModel> sorter5 = new TableRowSorter<>(productTableModel);
+
         orderHistoryTable.setRowSorter(sorter);
         vendorOrderTable.setRowSorter(sorter2);
+        vendorAdminTable.setRowSorter(sorter3);
+        adminProducerTable.setRowSorter(sorter4);
+        adminProductTable.setRowSorter(sorter5);
         addWindowListener(new WindowAdapter() {
             /** Invoked when a window is in the process of being closed.
              * @param e the event to be processed
              */
             @Override
             public void windowClosing(WindowEvent e) {
-                Main.saveVendor.save(Main.vendors);
-                Main.saveProducer.save(Main.producers);
-                Main.saveProduct.save(Main.products);
-                Main.saveOrder.save(Main.orders);
+                Main.saveVendor.save(Main.vendors,"src/Serialize/Vendor.ser");
+                Main.saveProducer.save(Main.producers, "src/Serialize/Producer.ser");
+                Main.saveProduct.save(Main.products, "src/Serialize/Product.ser");
+                Main.saveOrder.save(Main.orders, "src/Serialize/Order.ser");
                 System.exit(0);
             }
         });
         this.addKeyListener(new KeyAdapter() {
-            /** Invoked when a key has been pressed.
+            /**
+             * Invoked when a key has been pressed.
+             *
              * @param e the event to be processed
              */
             @Override
@@ -74,7 +89,8 @@ public class GUI extends JFrame {
             }
         });
     }
-    /** Sets the data in the Producer and Product lists
+    /**
+     * Sets the data in the Producer and Product lists
      */
     public void setListData(){
         ArrayList<String> vendorListData = new ArrayList<>();
@@ -89,19 +105,28 @@ public class GUI extends JFrame {
         productsList.setModel(new DefaultComboBoxModel(productListData.toArray()));
 
     }
-    /** When the login button is pressed
+    /**
+     * When the login button is pressed
      * Checks if the username and password are correct
      * If they are, logs in the user
      * If not, displays an error message
      */
     private void login(){
+        if(usernameText.getText().equals("admin")&&passwordText.getText().equals("admin")){
+            loginScreen.setVisible(false);
+            MainPanel.setVisible(true);
+            vendorMenu.setVisible(false);
+            producerMenu.setVisible(false);
+            adminMenu.setEnabled(true);
+            adminMenu.setVisible(true);
+            setMenuPanelsToFalse();
+            return;
+        }
         if(usernameText.getText().isEmpty() || passwordText.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Username or password is empty");
             return;
         }
 
-        /** Login as vendor, sets producer functions to disabled
-         */
         for (Vendor vendor : Main.vendors) {
             if (vendor.getUsername().equals(usernameText.getText()) && vendor.getPassword().equals(passwordText.getText())) {
                 vendorUser = vendor;
@@ -140,26 +165,30 @@ public class GUI extends JFrame {
         JOptionPane.showMessageDialog(null, "wrong username or password");
     }
 
-    /** When the login button is pressed
+    /**
+     * When the login button is pressed
      * Checks if the username and password are correct
      * If they are, logs in the user
      * If not, displays an error message
+     *
      * @param e the event to be processed
      */
 
     private void loginButton(ActionEvent e) {login();}
 
-    /** When the register button is pressed
+    /**
+     * When the register button is pressed
      * Checks if the username already exists
      * If it does, displays an error message
      * If not, asks the user if they want to register as a vendor or producer
      * If they choose vendor, asks for the starting money and creates a new vendor
      * If they choose producer, asks for the product name, starting price and daily production and creates a new producer
      * If the product name doesn't exist, displays an error message
+     *
      * @param e the event to be processed
      */
     private void registerButton(ActionEvent e) {
-        if(usernameText.getText().equals("") || passwordText.getText().equals("")){
+        if(usernameText.getText().isEmpty() || passwordText.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Username or password is empty");
             return;
         }
@@ -190,6 +219,7 @@ public class GUI extends JFrame {
             loginScreen.setVisible(false);
             MainPanel.setVisible(true);
             producerMenu.setEnabled(false);
+            vendorMenu.setEnabled(true);
         } else {
             String productName = JOptionPane.showInputDialog("Enter product name");
             Product prod = null;
@@ -211,13 +241,16 @@ public class GUI extends JFrame {
             loginScreen.setVisible(false);
             MainPanel.setVisible(true);
             vendorMenu.setEnabled(false);
+            producerMenu.setEnabled(true);
 
         }
 
     }
 
-    /** When the logout button is pressed
+    /**
+     * When the logout button is pressed
      * Logs out the user and displays the login screen
+     *
      * @param e the event to be processed
      */
     private void logout(ActionEvent e) {
@@ -229,8 +262,10 @@ public class GUI extends JFrame {
         usernameText.setText("");
         System.out.println(prodList);
     }
-    /** When the vendor data menu is pressed
+    /**
+     * When the vendor data menu is pressed
      * Displays the vendor data menu
+     *
      * @param e the event to be processed
      */
     private void VendorDataMenu(ActionEvent e) {
@@ -240,15 +275,16 @@ public class GUI extends JFrame {
         fundsLabel.setText(vendorUser.getMoney() +"$");
         setListData();
     }
-    /** When the vendor order menu is pressed
+    /**
+     * When the vendor order menu is pressed
      * Displays the vendor order menu
+     *
      * @param e the event to be processed
      */
     private void VendorOrderMenu(ActionEvent e) {
         setMenuPanelsToFalse();
         for (Order order : Main.orders) {
             if(order.getBuyer().getName().equals(vendorUser.getName())) {
-                System.out.println("Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                 vendorOrderModel.addOrder(order);
             }
         }
@@ -324,6 +360,9 @@ public class GUI extends JFrame {
         prodDataMenuPanel.setVisible(false);
         producerVendorMenuPanel.setVisible(false);
         OrderHistoryMenuPanel.setVisible(false);
+        adminVendorPanel.setVisible(false);
+        adminProducersPanel.setVisible(false);
+        adminProductPanel.setVisible(false);
     }
 
     private void passwordTextKeyPressed(KeyEvent e) {
@@ -340,18 +379,27 @@ public class GUI extends JFrame {
      */
     private void vendorMenuCB(ActionEvent e) {
         String producerName = (String) vendorMenuCB.getSelectedItem();
-        Producer producer = null;
-        for (Producer prod : Main.producers) {
-            if (prod.getName().equals(producerName)) {
-                producer = prod;
-                break;
-            }
-        }
+        Producer producer = findProducer(producerName);
+
         if (producer == null)
             return;
         vendorProdMenuProdName.setText(producer.getName());
         vendorProdMenuProduct.setText(producer.getProduct().getName());
         vendorProdMenuAmount.setText(String.valueOf(producer.getQuantity()));
+    }
+    /**
+     * Find a producer by name in Main.producers
+     *
+     * @param name the name of the producer
+     * @return the producer with the given name
+     */
+    public Producer findProducer(String name){
+        for (Producer prod : Main.producers) {
+            if (prod.getName().equals(name)) {
+                return prod;
+            }
+        }
+        return null;
     }
 
     /**
@@ -390,13 +438,7 @@ public class GUI extends JFrame {
 
     private void VendorMenuCBCurrent(ActionEvent e) {
         String producerName = (String) VendorMenuCBCurrent.getSelectedItem();
-        Producer producer = null;
-        for (Producer prod : Main.producers) {
-            if (prod.getName().equals(producerName)) {
-                producer = prod;
-                break;
-            }
-        }
+        Producer producer = findProducer(producerName);
         if(producer == null)
             return;
         vendorProdMenuProdName.setText(producer.getName());
@@ -509,7 +551,7 @@ public class GUI extends JFrame {
      *
      * @param e the event to be processed
      */
-    private void vendors(ActionEvent e) {
+    private void vendors(ActionEvent e)throws NullPointerException {
         prodVendorName.setText(comboBoxVendors.getSelectedItem().toString());
         Vendor tempVendor;
         for (Vendor vendor:Main.vendors){
@@ -528,29 +570,30 @@ public class GUI extends JFrame {
      *
      * @param e the event to be processed
      */
-    private void blackListed(ActionEvent e) {
-        if(checkBoxBlackListed.isSelected()){
-            for (Vendor vendor : Main.vendors) {
-                if(vendor.getName().equals(comboBoxVendors.getSelectedItem().toString())){
-                    if(!producerUser.getBlackListed().contains(vendor)) {
-                        producerUser.getBlackListed().add(vendor);
-                        vendor.getProducers().remove(producerUser);
+    private void blackListed(ActionEvent e) throws NullPointerException{
+        try {
+            if (checkBoxBlackListed.isSelected()) {
+                for (Vendor vendor : Main.vendors) {
+                    if (vendor.getName().equals(comboBoxVendors.getSelectedItem().toString())) {
+                        if (!producerUser.getBlackListed().contains(vendor)) {
+                            producerUser.getBlackListed().add(vendor);
+                            vendor.getProducers().remove(producerUser);
+                        }
+                        break;
                     }
-                    break;
+                }
+            } else {
+                for (Vendor vendor : Main.vendors) {
+                    if (vendor.getName().equals(comboBoxVendors.getSelectedItem().toString())) {
+                        if (producerUser.getBlackListed().contains(vendor)) {
+                            producerUser.getBlackListed().remove(vendor);
+                            System.out.println("unblacklisted " + vendor.getName());
+                        }
+                        break;
+                    }
                 }
             }
-        }
-        else{
-            for (Vendor vendor : Main.vendors) {
-                if(vendor.getName().equals(comboBoxVendors.getSelectedItem().toString())){
-                    if(producerUser.getBlackListed().contains(vendor)) {
-                        producerUser.getBlackListed().remove(vendor);
-                        System.out.println("unblacklisted "+vendor.getName());
-                    }
-                    break;
-                }
-            }
-        }
+        }catch (NullPointerException exception){exception.printStackTrace(); throw exception;}
     }
     /**
      * When the order history menu is pressed
@@ -590,6 +633,12 @@ public class GUI extends JFrame {
         checkBoxVendorMoney.setSelected(false);
     }
 
+    /**
+     * Sets all the componenet's data to the selected producer's data
+     *
+     * @param e the event to be processed
+     */
+
     private void orderProducers(ActionEvent e) {
 
         for (Producer producer1:Main.producers) {
@@ -606,6 +655,13 @@ public class GUI extends JFrame {
             }
         }
     }
+    /**
+     * When the order button is pressed
+     * Creates a new order
+     * If the vendor doesn't have enough money, displays an error message
+     *
+     * @param e the event to be processed
+     */
 
     private void order(ActionEvent e) {
         if(orderProducer == null){
@@ -622,6 +678,12 @@ public class GUI extends JFrame {
         vendorOrderModel.addOrder(Main.orders.getLast());
 
     }
+    /**
+     * When the order amount slider is pressed
+     * Sets the order amount text field to the slider's value
+     *
+     * @param e the event to be processed
+     */
 
     private void orderAmountSliderStateChanged(ChangeEvent e) {
         if (orderProducer == null)
@@ -629,6 +691,67 @@ public class GUI extends JFrame {
         orderProductPrice.setText(String.format("%.2f",orderProducer.getPrice()*Integer.parseInt(orderAmountTextfield.getText())) +"$");
     }
 
+    private void adminVendors(ActionEvent e) {
+        setMenuPanelsToFalse();
+        adminVendorPanel.setVisible(true);
+    }
+
+    private void removeVendor(ActionEvent e) {
+        int row = vendorAdminTable.getSelectedRow();
+        if(row == -1)
+            return;
+        String name = (String) vendorAdminTable.getValueAt(row, 0);
+        vendorTableModel.removeVendor(name);
+        Main.producers.forEach(producer -> producer.getBlackListed().removeIf(vendor -> vendor.getName().equals(name)));
+        Main.orders.removeIf(order -> order.getBuyer().getName().equals(name));
+        Main.vendors.removeIf(vendor -> vendor.getName().equals(name));
+    }
+
+    private void adminProducersMenu(ActionEvent e) {
+        setMenuPanelsToFalse();
+        adminProducersPanel.setVisible(true);
+    }
+
+    private void adminProductsMenu(ActionEvent e) {
+        setMenuPanelsToFalse();
+        adminProductPanel.setVisible(true);
+    }
+
+    private void removeProducer(ActionEvent e) {
+        int row = adminProducerTable.getSelectedRow();
+        if(row == -1)
+            return;
+        String name = (String) adminProducerTable.getValueAt(row, 0);
+        producerTableModel.removeProducer(name);
+        Main.vendors.forEach(vendor -> vendor.getProducers().removeIf(producer -> producer.getName().equals(name)));
+        Main.orders.removeIf(order -> order.getSeller().getName().equals(name));
+        Main.producers.removeIf(producer -> producer.getName().equals(name));
+    }
+
+    private void adminAddProduct(ActionEvent e) {
+        String name = JOptionPane.showInputDialog("Enter product name");
+        String description = JOptionPane.showInputDialog("Enter product description");
+        if(name == null || description == null)
+            return;
+        Product product = new Product(name, description);
+        Main.products.add(product);
+        productTableModel.refresh();
+    }
+
+    private void adminRemoveProduct(ActionEvent e) {
+        int row = adminProductTable.getSelectedRow();
+        if(row == -1)
+            return;
+        String name = (String) adminProductTable.getValueAt(row, 0);
+        productTableModel.removeProduct(name);
+        Main.orders.removeIf(order -> order.getProduct().getName().equals(name));
+        Main.products.removeIf(product -> product.getName().equals(name));
+
+    }
+
+    /**
+     * JFormDesigner initialization of the components
+     */
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         panel1 = new JPanel();
@@ -643,8 +766,26 @@ public class GUI extends JFrame {
         producerVendorsMenu = new JMenuItem();
         misc = new JMenu();
         miscOrderMenu = new JMenuItem();
+        adminMenu = new JMenu();
+        adminVendors = new JMenuItem();
+        adminProducersMenu = new JMenuItem();
+        adminProductsMenu = new JMenuItem();
         hSpacer1 = new JPanel(null);
         logoutButton = new JButton();
+        adminProductPanel = new JPanel();
+        scrollPane5 = new JScrollPane();
+        adminProductTable = new JTable();
+        panel3 = new JPanel();
+        adminAddProduct = new JButton();
+        adminRemoveProduct = new JButton();
+        adminVendorPanel = new JPanel();
+        scrollPane3 = new JScrollPane();
+        vendorAdminTable = new JTable();
+        removeVendorButton = new JButton();
+        adminProducersPanel = new JPanel();
+        scrollPane4 = new JScrollPane();
+        adminProducerTable = new JTable();
+        removeProducerButton = new JButton();
         vendorOrderPanel = new JPanel();
         scrollPane2 = new JScrollPane();
         vendorOrderTable = new JTable();
@@ -769,6 +910,7 @@ public class GUI extends JFrame {
                     menuBar1.setMinimumSize(new Dimension(100, 30));
                     menuBar1.setMargin(new Insets(0, 10, 0, 15));
                     menuBar1.setMaximumSize(new Dimension(640, 32768));
+                    menuBar1.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 12));
 
                     //======== vendorMenu ========
                     {
@@ -827,6 +969,27 @@ public class GUI extends JFrame {
                     }
                     menuBar1.add(misc);
 
+                    //======== adminMenu ========
+                    {
+                        adminMenu.setText("Admin");
+
+                        //---- adminVendors ----
+                        adminVendors.setText("Vendors");
+                        adminVendors.addActionListener(e -> adminVendors(e));
+                        adminMenu.add(adminVendors);
+
+                        //---- adminProducersMenu ----
+                        adminProducersMenu.setText("Producers");
+                        adminProducersMenu.addActionListener(e -> adminProducersMenu(e));
+                        adminMenu.add(adminProducersMenu);
+
+                        //---- adminProductsMenu ----
+                        adminProductsMenu.setText("Products");
+                        adminProductsMenu.addActionListener(e -> adminProductsMenu(e));
+                        adminMenu.add(adminProductsMenu);
+                    }
+                    menuBar1.add(adminMenu);
+
                     //---- hSpacer1 ----
                     hSpacer1.setOpaque(false);
                     hSpacer1.setMaximumSize(new Dimension(350000, 32767));
@@ -844,6 +1007,103 @@ public class GUI extends JFrame {
                 }
                 MainPanel.add(menuBar1, "pad 0,cell 0 0,aligny top,grow 100 0");
 
+                //======== adminProductPanel ========
+                {
+                    adminProductPanel.setPreferredSize(new Dimension(640, 390));
+                    adminProductPanel.setLayout(new MigLayout(
+                        "hidemode 3",
+                        // columns
+                        "[395,fill]" +
+                        "[169,fill]",
+                        // rows
+                        "[330]"));
+
+                    //======== scrollPane5 ========
+                    {
+                        scrollPane5.setViewportView(adminProductTable);
+                    }
+                    adminProductPanel.add(scrollPane5, "cell 0 0");
+
+                    //======== panel3 ========
+                    {
+                        panel3.setLayout(new MigLayout(
+                            "hidemode 3",
+                            // columns
+                            "[156,fill]",
+                            // rows
+                            "[top]" +
+                            "[]" +
+                            "[]" +
+                            "[]"));
+
+                        //---- adminAddProduct ----
+                        adminAddProduct.setText("Add");
+                        adminAddProduct.addActionListener(e -> adminAddProduct(e));
+                        panel3.add(adminAddProduct, "cell 0 1");
+
+                        //---- adminRemoveProduct ----
+                        adminRemoveProduct.setText("Remove");
+                        adminRemoveProduct.addActionListener(e -> adminRemoveProduct(e));
+                        panel3.add(adminRemoveProduct, "cell 0 2");
+                    }
+                    adminProductPanel.add(panel3, "cell 1 0");
+                }
+                MainPanel.add(adminProductPanel, "cell 0 1");
+
+                //======== adminVendorPanel ========
+                {
+                    adminVendorPanel.setPreferredSize(new Dimension(640, 390));
+                    adminVendorPanel.setVisible(false);
+                    adminVendorPanel.setLayout(new MigLayout(
+                        "hidemode 3",
+                        // columns
+                        "[451,fill]" +
+                        "[142,fill]",
+                        // rows
+                        "[]" +
+                        "[]" +
+                        "[]"));
+
+                    //======== scrollPane3 ========
+                    {
+                        scrollPane3.setViewportView(vendorAdminTable);
+                    }
+                    adminVendorPanel.add(scrollPane3, "cell 0 0");
+
+                    //---- removeVendorButton ----
+                    removeVendorButton.setText("Remove");
+                    removeVendorButton.addActionListener(e -> removeVendor(e));
+                    adminVendorPanel.add(removeVendorButton, "cell 1 0");
+                }
+                MainPanel.add(adminVendorPanel, "cell 0 1");
+
+                //======== adminProducersPanel ========
+                {
+                    adminProducersPanel.setPreferredSize(new Dimension(640, 390));
+                    adminProducersPanel.setVisible(false);
+                    adminProducersPanel.setLayout(new MigLayout(
+                        "hidemode 3",
+                        // columns
+                        "[425,fill]" +
+                        "[190,fill]",
+                        // rows
+                        "[330]" +
+                        "[]" +
+                        "[]"));
+
+                    //======== scrollPane4 ========
+                    {
+                        scrollPane4.setViewportView(adminProducerTable);
+                    }
+                    adminProducersPanel.add(scrollPane4, "cell 0 0");
+
+                    //---- removeProducerButton ----
+                    removeProducerButton.setText("Remove");
+                    removeProducerButton.addActionListener(e -> removeProducer(e));
+                    adminProducersPanel.add(removeProducerButton, "cell 1 0");
+                }
+                MainPanel.add(adminProducersPanel, "cell 0 1");
+
                 //======== vendorOrderPanel ========
                 {
                     vendorOrderPanel.setMaximumSize(new Dimension(640, 420));
@@ -860,6 +1120,9 @@ public class GUI extends JFrame {
                     //======== scrollPane2 ========
                     {
                         scrollPane2.setPreferredSize(new Dimension(640, 300));
+
+                        //---- vendorOrderTable ----
+                        vendorOrderTable.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 12));
                         scrollPane2.setViewportView(vendorOrderTable);
                     }
                     vendorOrderPanel.add(scrollPane2, "cell 0 0");
@@ -881,6 +1144,7 @@ public class GUI extends JFrame {
 
                         //---- orderProducers ----
                         orderProducers.setPreferredSize(new Dimension(120, 26));
+                        orderProducers.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 12));
                         orderProducers.addActionListener(e -> orderProducers(e));
                         orderBottomPanel.add(orderProducers, "cell 0 0");
 
@@ -888,26 +1152,31 @@ public class GUI extends JFrame {
                         orderProducerProduct.setText("prodName");
                         orderProducerProduct.setPreferredSize(new Dimension(120, 16));
                         orderProducerProduct.setToolTipText("Product");
+                        orderProducerProduct.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 12));
                         orderBottomPanel.add(orderProducerProduct, "cell 1 0");
 
                         //---- orderProductPrice ----
                         orderProductPrice.setText("0$");
                         orderProductPrice.setToolTipText("The amount to be payed");
+                        orderProductPrice.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 12));
                         orderBottomPanel.add(orderProductPrice, "cell 2 0");
 
                         //---- orderAmountSlider ----
                         orderAmountSlider.setMaximum(1000);
                         orderAmountSlider.setToolTipText("maximum order = on stock * 3");
+                        orderAmountSlider.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 12));
                         orderAmountSlider.addChangeListener(e -> orderAmountSliderStateChanged(e));
                         orderBottomPanel.add(orderAmountSlider, "cell 3 0");
 
                         //---- orderAmountTextfield ----
                         orderAmountTextfield.setPreferredSize(new Dimension(40, 26));
                         orderAmountTextfield.setToolTipText("precise order or more than max order");
+                        orderAmountTextfield.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 12));
                         orderBottomPanel.add(orderAmountTextfield, "cell 4 0");
 
                         //---- orderButton ----
                         orderButton.setText("Order");
+                        orderButton.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 12));
                         orderButton.addActionListener(e -> order(e));
                         orderBottomPanel.add(orderButton, "cell 5 0");
                     }
@@ -919,16 +1188,21 @@ public class GUI extends JFrame {
                 {
                     OrderHistoryMenuPanel.setMaximumSize(new Dimension(640, 420));
                     OrderHistoryMenuPanel.setMinimumSize(new Dimension(600, 300));
+                    OrderHistoryMenuPanel.setVisible(false);
                     OrderHistoryMenuPanel.setLayout(new MigLayout(
                         "hidemode 3",
                         // columns
                         "10[fill]10",
                         // rows
-                        "0[]0"));
+                        "0[fill]0"));
 
                     //======== scrollPane1 ========
                     {
-                        scrollPane1.setPreferredSize(new Dimension(640, 100));
+                        scrollPane1.setPreferredSize(new Dimension(640, 390));
+
+                        //---- orderHistoryTable ----
+                        orderHistoryTable.setPreferredSize(new Dimension(390, 300));
+                        orderHistoryTable.setFont(new Font("JetBrains Mono Light", Font.PLAIN, 12));
                         scrollPane1.setViewportView(orderHistoryTable);
                     }
                     OrderHistoryMenuPanel.add(scrollPane1, "cell 0 0");
@@ -1082,8 +1356,8 @@ public class GUI extends JFrame {
                 //======== vendorProducerPanel ========
                 {
                     vendorProducerPanel.setPreferredSize(new Dimension(640, 390));
-                    vendorProducerPanel.setVisible(false);
                     vendorProducerPanel.setMaximumSize(new Dimension(640, 420));
+                    vendorProducerPanel.setVisible(false);
                     vendorProducerPanel.setLayout(new MigLayout(
                         "fillx,hidemode 3,aligny center",
                         // columns
@@ -1167,8 +1441,8 @@ public class GUI extends JFrame {
                 //======== vendorDataMenuPanel ========
                 {
                     vendorDataMenuPanel.setMinimumSize(new Dimension(640, 200));
-                    vendorDataMenuPanel.setVisible(false);
                     vendorDataMenuPanel.setMaximumSize(new Dimension(640, 420));
+                    vendorDataMenuPanel.setVisible(false);
                     vendorDataMenuPanel.setLayout(new MigLayout(
                         "hidemode 3",
                         // columns
@@ -1223,6 +1497,7 @@ public class GUI extends JFrame {
                             nameOfUserLabel.setText("name");
                             nameOfUserLabel.setFont(new Font("JetBrains Mono ExtraLight", Font.PLAIN, 22));
                             nameOfUserLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+                            nameOfUserLabel.setMaximumSize(new Dimension(80, 30));
                             simplePanel.add(nameOfUserLabel, "cell 1 0");
                             simplePanel.add(checkBoxVendorName, "cell 2 0");
 
@@ -1373,8 +1648,26 @@ public class GUI extends JFrame {
     private JMenuItem producerVendorsMenu;
     private JMenu misc;
     private JMenuItem miscOrderMenu;
+    private JMenu adminMenu;
+    private JMenuItem adminVendors;
+    private JMenuItem adminProducersMenu;
+    private JMenuItem adminProductsMenu;
     private JPanel hSpacer1;
     private JButton logoutButton;
+    private JPanel adminProductPanel;
+    private JScrollPane scrollPane5;
+    private JTable adminProductTable;
+    private JPanel panel3;
+    private JButton adminAddProduct;
+    private JButton adminRemoveProduct;
+    private JPanel adminVendorPanel;
+    private JScrollPane scrollPane3;
+    private JTable vendorAdminTable;
+    private JButton removeVendorButton;
+    private JPanel adminProducersPanel;
+    private JScrollPane scrollPane4;
+    private JTable adminProducerTable;
+    private JButton removeProducerButton;
     private JPanel vendorOrderPanel;
     private JScrollPane scrollPane2;
     private JTable vendorOrderTable;
