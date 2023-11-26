@@ -13,7 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class SaveTest {
-
+    /**
+     * This method tests the save method with a Producer list.
+     */
     @Test
     public void producerSave() {
         ArrayList<Producer> producers = new ArrayList<>();
@@ -21,6 +23,10 @@ class SaveTest {
         producers.add(producer);
         assertTrue(new Save<Producer>().save(producers, "src/Tests/Producer.ser"));
     }
+
+    /**
+     * This method tests the save method with a Vendor list.
+     */
     @Test
     public void vendorSave() {
         ArrayList<Vendor> vendors = new ArrayList<>();
@@ -28,6 +34,10 @@ class SaveTest {
         vendors.add(vendor);
         assertTrue(new Save<Vendor>().save(vendors, "src/Tests/Vendor.ser"));
     }
+
+    /**
+     * This method tests the save method with a Product list.
+     */
     @Test
     public void productSave() {
         ArrayList<Product> products = new ArrayList<>();
@@ -35,6 +45,9 @@ class SaveTest {
         products.add(product);
         assertTrue(new Save<Product>().save(products , "src/Tests/Product.ser"));
     }
+    /**
+     * This method tests the save method with an Order list.
+     */
     @Test
     public void orderSave() {
         ArrayList<Order> orders = new ArrayList<>();
@@ -42,21 +55,37 @@ class SaveTest {
         orders.add(order);
         assertTrue(new Save<Order>().save(orders , "src/Tests/Order.ser"));
     }
+
+    /**
+     * This method tests the save method with an empty Order list.
+     */
     @Test
     public void orderSaveEmpty() {
         ArrayList<Order> orders = new ArrayList<>();
         assertFalse(new Save<Order>().save(orders , "src/Tests/Order.ser"));
     }
+
+    /**
+     * This method tests the save method with an empty Product list.
+     */
     @Test
     public void productSaveEmpty() {
         ArrayList<Product> products = new ArrayList<>();
         assertFalse(new Save<Product>().save(products , "src/Tests/Product.ser"));
     }
+
+    /**
+     * This method tests the save method with an empty Vendor list.
+     */
     @Test
     public void vendorSaveEmpty() {
         ArrayList<Vendor> vendors = new ArrayList<>();
         assertFalse(new Save<Vendor>().save(vendors , "src/Tests/Vendor.ser"));
     }
+
+    /**
+     * This method tests the save method with an empty Producer list.
+     */
     @Test
     public void producerSaveEmpty() {
         ArrayList<Producer> producers = new ArrayList<>();

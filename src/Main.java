@@ -28,7 +28,6 @@ public class Main {
      * @param args the arguments of the main method
      */
     public static void main(String[] args) {
-        products.removeIf(product -> product.getName().equals("car"));
         if(!orders.isEmpty())
             if(!orders.get(0).getLastCheck().isEqual(LocalDate.now())){
                 for (Producer producer : producers) {

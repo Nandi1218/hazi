@@ -205,6 +205,7 @@ public class Producer implements Serializable {
 
     public void updateProducerQuantity(LocalDate lastCheck) {
         int days = lastCheck.until(LocalDate.now()).getDays();
+        System.out.println(days);
         quantity += days * dailyProduction;
     }
 

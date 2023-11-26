@@ -32,6 +32,7 @@ new FormModel {
 					"preferredSize": new java.awt.Dimension( 640, 420 )
 					"minimumSize": new java.awt.Dimension( 640, 350 )
 					"maximumSize": new java.awt.Dimension( 640, 420 )
+					"visible": false
 					add( new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 						name: "menuBar1"
 						"preferredSize": new java.awt.Dimension( 640, 30 )
@@ -129,11 +130,12 @@ new FormModel {
 					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 						"$layoutConstraints": "hidemode 3"
-						"$columnConstraints": "[395,fill][169,fill]"
+						"$columnConstraints": "[400,fill][200,fill]"
 						"$rowConstraints": "[330]"
 					} ) {
 						name: "adminProductPanel"
 						"preferredSize": new java.awt.Dimension( 640, 390 )
+						"visible": false
 						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 							name: "scrollPane5"
 							add( new FormComponent( "javax.swing.JTable" ) {
@@ -170,8 +172,8 @@ new FormModel {
 					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 						"$layoutConstraints": "hidemode 3"
-						"$columnConstraints": "[451,fill][142,fill]"
-						"$rowConstraints": "[][][]"
+						"$columnConstraints": "[400,fill][200,fill]"
+						"$rowConstraints": "[center][][]"
 					} ) {
 						name: "adminVendorPanel"
 						"preferredSize": new java.awt.Dimension( 640, 390 )
@@ -196,8 +198,8 @@ new FormModel {
 					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 						"$layoutConstraints": "hidemode 3"
-						"$columnConstraints": "[425,fill][190,fill]"
-						"$rowConstraints": "[330][][]"
+						"$columnConstraints": "[400,fill][200,fill]"
+						"$rowConstraints": "[330,center]"
 					} ) {
 						name: "adminProducersPanel"
 						"preferredSize": new java.awt.Dimension( 640, 390 )
@@ -740,7 +742,6 @@ new FormModel {
 					"preferredSize": new java.awt.Dimension( 280, 200 )
 					"maximumSize": new java.awt.Dimension( 400, 400 )
 					"minimumSize": new java.awt.Dimension( 0, 0 )
-					"visible": false
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label1"
 						"text": "Username:"

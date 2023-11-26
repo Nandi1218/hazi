@@ -9,21 +9,37 @@ import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * This class is a table model for the order history table.
+ * It is used to display the order history of the user.
+ */
 public class VendorOrderModel extends AbstractTableModel{
-
+/**The list of orders.*/
     List<Order> orders = new ArrayList<Order>();
 
+    /**
+     * This method returns the number of rows in the table.
+     * @return the number of rows in the table
+     */
     @Override
     public int getRowCount() {
         return orders.size();
     }
-
+    /**
+     * This method returns the number of columns in the table.
+     * @return the number of columns in the table
+     */
     @Override
     public int getColumnCount() {
         return 8;
     }
 
+    /**
+     * This method returns the value of the cell at the given row and column.
+     * @param rowIndex        the row whose value is to be queried
+     * @param columnIndex     the column whose value is to be queried
+     * @return the value Object at the specified cell
+     */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Order order = orders.get(rowIndex);
@@ -40,6 +56,11 @@ public class VendorOrderModel extends AbstractTableModel{
         };
     }
 
+    /**
+     * This method returns the class of the column at the given index.
+     * @param columnIndex  the column being queried
+     * @return  the class of the column at columnIndex
+     */
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return switch (columnIndex) {
@@ -51,7 +72,11 @@ public class VendorOrderModel extends AbstractTableModel{
             default -> null;
         };
     }
-
+    /**
+     * This method returns the name of the column at the given index.
+     * @param column     the column whose value is to be queried
+     * @return the name of the column
+     */
     @Override
     public String getColumnName(int column) {
         return switch (column) {
@@ -66,6 +91,11 @@ public class VendorOrderModel extends AbstractTableModel{
             default -> null;
         };
     }
+
+    /**
+     * This method adds an order to the table.
+     * @param order the order to be added
+     */
     public void addOrder(Order order) {
         if(orders.contains(order))
             return;

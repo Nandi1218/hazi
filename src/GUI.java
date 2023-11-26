@@ -26,14 +26,23 @@ import tableModels.*;
  */
 
 public class GUI extends JFrame {
+    /** if the user is a vendor*/
     Vendor vendorUser = null;
+    /** the producer that the vendor is ordering from*/
     Producer orderProducer = null;
+    /** The list of producers*/
     ArrayList<String> prodList;
+    /** table model for the order history table*/
     public static final OrderHistoryTableModel dataModel = new OrderHistoryTableModel();
+    /** table model for the vendor order table*/
     public static final VendorOrderModel vendorOrderModel = new VendorOrderModel();
+    /** table model for the vendor table*/
     public static final VendorTableModel vendorTableModel = new VendorTableModel(Main.vendors);
+    /** table model for the producer table*/
     public static final ProducerTableModel producerTableModel = new ProducerTableModel(Main.producers);
+    /** table model for the product table*/
     public static final ProductTableModel productTableModel = new ProductTableModel(Main.products);
+    /** if the user is a producer*/
     Producer producerUser = null;
 
     /** Constructor for the GUI class
@@ -121,7 +130,7 @@ public class GUI extends JFrame {
             adminMenu.setVisible(true);
             setMenuPanelsToFalse();
             return;
-        }
+        }else adminMenu.setVisible(false);
         if(usernameText.getText().isEmpty() || passwordText.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Username or password is empty");
             return;
@@ -691,32 +700,58 @@ public class GUI extends JFrame {
         orderProductPrice.setText(String.format("%.2f",orderProducer.getPrice()*Integer.parseInt(orderAmountTextfield.getText())) +"$");
     }
 
+    /**
+     * Admin vendor menu is pressed
+     * Displays the admin vendor panel
+     * @param e the event to be processed
+     */
     private void adminVendors(ActionEvent e) {
         setMenuPanelsToFalse();
         adminVendorPanel.setVisible(true);
     }
+
+    /**
+     * Admin remove vendor button is pressed
+     * Removes the selected vendor
+     * @param e the event to be processed
+     */
 
     private void removeVendor(ActionEvent e) {
         int row = vendorAdminTable.getSelectedRow();
         if(row == -1)
             return;
         String name = (String) vendorAdminTable.getValueAt(row, 0);
-        vendorTableModel.removeVendor(name);
         Main.producers.forEach(producer -> producer.getBlackListed().removeIf(vendor -> vendor.getName().equals(name)));
         Main.orders.removeIf(order -> order.getBuyer().getName().equals(name));
         Main.vendors.removeIf(vendor -> vendor.getName().equals(name));
+        vendorTableModel.removeVendor(name);
     }
 
+    /**
+     * Admin producers menu is pressed
+     * Displays the admin producers panel
+     * @param e the event to be processed
+     */
     private void adminProducersMenu(ActionEvent e) {
         setMenuPanelsToFalse();
         adminProducersPanel.setVisible(true);
     }
 
+    /**
+     * Admin products menu is pressed
+     * Displays the admin products panel
+     * @param e  the event to be processed
+     */
     private void adminProductsMenu(ActionEvent e) {
         setMenuPanelsToFalse();
         adminProductPanel.setVisible(true);
     }
 
+    /**
+     * Admin add vendor button is pressed
+     * Adds a new vendor
+     * @param e
+     */
     private void removeProducer(ActionEvent e) {
         int row = adminProducerTable.getSelectedRow();
         if(row == -1)
@@ -728,6 +763,11 @@ public class GUI extends JFrame {
         Main.producers.removeIf(producer -> producer.getName().equals(name));
     }
 
+    /**
+     * Admin add vendor button is pressed
+     * Adds a new vendor to the table
+     * @param e the event to be processed
+     */
     private void adminAddProduct(ActionEvent e) {
         String name = JOptionPane.showInputDialog("Enter product name");
         String description = JOptionPane.showInputDialog("Enter product description");
@@ -738,6 +778,11 @@ public class GUI extends JFrame {
         productTableModel.refresh();
     }
 
+    /**
+     * Admin remove vendor button is pressed
+     * Removes the selected product
+     * @param e the event to be processed
+     */
     private void adminRemoveProduct(ActionEvent e) {
         int row = adminProductTable.getSelectedRow();
         if(row == -1)
@@ -895,6 +940,7 @@ public class GUI extends JFrame {
                 MainPanel.setPreferredSize(new Dimension(640, 420));
                 MainPanel.setMinimumSize(new Dimension(640, 350));
                 MainPanel.setMaximumSize(new Dimension(640, 420));
+                MainPanel.setVisible(false);
                 MainPanel.setLayout(new MigLayout(
                     "hidemode 3",
                     // columns
@@ -1010,11 +1056,12 @@ public class GUI extends JFrame {
                 //======== adminProductPanel ========
                 {
                     adminProductPanel.setPreferredSize(new Dimension(640, 390));
+                    adminProductPanel.setVisible(false);
                     adminProductPanel.setLayout(new MigLayout(
                         "hidemode 3",
                         // columns
-                        "[395,fill]" +
-                        "[169,fill]",
+                        "[400,fill]" +
+                        "[200,fill]",
                         // rows
                         "[330]"));
 
@@ -1057,10 +1104,10 @@ public class GUI extends JFrame {
                     adminVendorPanel.setLayout(new MigLayout(
                         "hidemode 3",
                         // columns
-                        "[451,fill]" +
-                        "[142,fill]",
+                        "[400,fill]" +
+                        "[200,fill]",
                         // rows
-                        "[]" +
+                        "[center]" +
                         "[]" +
                         "[]"));
 
@@ -1084,12 +1131,10 @@ public class GUI extends JFrame {
                     adminProducersPanel.setLayout(new MigLayout(
                         "hidemode 3",
                         // columns
-                        "[425,fill]" +
-                        "[190,fill]",
+                        "[400,fill]" +
+                        "[200,fill]",
                         // rows
-                        "[330]" +
-                        "[]" +
-                        "[]"));
+                        "[330,center]"));
 
                     //======== scrollPane4 ========
                     {
@@ -1552,7 +1597,6 @@ public class GUI extends JFrame {
                 loginScreen.setPreferredSize(new Dimension(280, 200));
                 loginScreen.setMaximumSize(new Dimension(400, 400));
                 loginScreen.setMinimumSize(new Dimension(0, 0));
-                loginScreen.setVisible(false);
                 loginScreen.setLayout(new MigLayout(
                     "novisualpadding,hidemode 3,align center center",
                     // columns
