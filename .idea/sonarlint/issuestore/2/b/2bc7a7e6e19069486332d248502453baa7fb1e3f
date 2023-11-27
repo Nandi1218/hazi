@@ -1,8 +1,0 @@
-
-d
-java:S1192"IDefine a constant instead of duplicating this literal "password" 4 times.(÷«Ðªûÿÿÿÿ
-d
-java:S1192"IDefine a constant instead of duplicating this literal "username" 4 times.(÷«Ðªûÿÿÿÿ
-t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ŠÝò¼ûÿÿÿÿ
-F
-java:S5960"+Remove this assertion from production code.(±‚Èûûÿÿÿÿ

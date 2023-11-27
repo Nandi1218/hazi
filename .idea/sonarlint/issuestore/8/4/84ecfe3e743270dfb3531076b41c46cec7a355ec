@@ -1,24 +1,0 @@
-
-u
-java:S1192"XDefine a constant instead of duplicating this literal "Successfully loaded \t " 4 times.(Ç”Ë÷8ëôâÁ1
-Š
-java:S1192"mDefine a constant instead of duplicating this literal "Failed to load. File not found or corrupted." 4 times.(ğ¥ú¤8êôâÁ1
-’
-java:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(„¨ôüÿÿÿÿ8ëôâÁ1
-
-java:S1319("pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(æ¡«“8ëôâÁ1
-Œ
-java:S13198"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(›“ú-8ëôâÁ1
-
-java:S1319G"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(Ÿ„Ø‰8ìôâÁ1
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ğÕš’
-U
-java:S1118":Add a private constructor to hide the implicit public one.(Ÿûº²úÿÿÿÿ
-G	java:S106"+Replace this use of System.out by a logger.(Ç”Ë÷8ƒõâÁ1
-G	java:S106"+Replace this use of System.out by a logger.(ğ¥ú¤8ƒõâÁ1
-G	java:S106,"+Replace this use of System.out by a logger.(Ç”Ë÷8…õâÁ1
-G	java:S106/"+Replace this use of System.out by a logger.(ğ¥ú¤8…õâÁ1
-G	java:S106<"+Replace this use of System.out by a logger.(Ç”Ë÷8šõâÁ1
-G	java:S106?"+Replace this use of System.out by a logger.(ğ¥ú¤8šõâÁ1
-G	java:S106K"+Replace this use of System.out by a logger.(Ç”Ë÷8œõâÁ1
-G	java:S106N"+Replace this use of System.out by a logger.(ğ¥ú¤8õâÁ1
