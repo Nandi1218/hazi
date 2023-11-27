@@ -114,6 +114,7 @@ public class GUI extends JFrame {
             vendorListData.add(producer.getName());
         }
         for (Product product : vendorUser.getProducts()) {
+            System.out.println(product.getName());
             productListData.add(product.getName());
         }
         vendorList.setModel(new DefaultComboBoxModel(vendorListData.toArray()));
@@ -736,10 +737,11 @@ public class GUI extends JFrame {
         if(row == -1)
             return;
         String name = (String) vendorAdminTable.getValueAt(row, 0);
+        vendorTableModel.removeVendor(name);
         Main.producers.forEach(producer -> producer.getBlackListed().removeIf(vendor -> vendor.getName().equals(name)));
         Main.orders.removeIf(order -> order.getBuyer().getName().equals(name));
         Main.vendors.removeIf(vendor -> vendor.getName().equals(name));
-        vendorTableModel.removeVendor(name);
+        System.out.println(name);
     }
 
     /**
