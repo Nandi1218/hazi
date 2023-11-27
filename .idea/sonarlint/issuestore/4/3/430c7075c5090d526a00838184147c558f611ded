@@ -1,14 +1,10 @@
 
-ƒ
-java:S1319""hThe type of "products" should be an interface such as "List" rather than the implementation "ArrayList".(üù“úÿÿÿÿ
-„
-java:S1319""iThe type of "producers" should be an interface such as "List" rather than the implementation "ArrayList".(üù“úÿÿÿÿ
+“
+java:S1319†"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(®ÚŒÁùÿÿÿÿ8«ÊÁ1
 ‹
-java:S1319f"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(®ÚŒÁùÿÿÿÿ
-ƒ
-java:S1319m"hThe type of "products" should be an interface such as "List" rather than the implementation "ArrayList".(ÏÀÎÚşÿÿÿÿ
-‹
-java:S1319t"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(Î‘Ÿªÿÿÿÿÿ
-„
-java:S1319{"iThe type of "producers" should be an interface such as "List" rather than the implementation "ArrayList".(½ş²şÿÿÿÿ
-t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(öŸøûúÿÿÿÿ
+java:S1319"hThe type of "products" should be an interface such as "List" rather than the implementation "ArrayList".(ÏÀÎÚşÿÿÿÿ8Ÿ«ÊÁ1
+“
+java:S1319˜"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(Î‘Ÿªÿÿÿÿÿ8Ÿ«ÊÁ1
+Œ
+java:S1319¡"iThe type of "producers" should be an interface such as "List" rather than the implementation "ArrayList".(½ş²şÿÿÿÿ8Ÿ«ÊÁ1
+{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(öŸøûúÿÿÿÿ8¡«ÊÁ1

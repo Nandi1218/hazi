@@ -43,8 +43,6 @@ public class Vendor implements Serializable {
      * @param password  The vendor's password
      * @param name      The vendor's name
      * @param money     The vendor's money
-     * @param products  The vendor's products
-     * @param producers The vendor's producers
      */
     public Vendor(String username, String password, String name, double money) {
         this.username = username;
@@ -181,6 +179,11 @@ public class Vendor implements Serializable {
                 '}' + "\n";
     }
 
+    /**
+     * Method that adds a producer to the vendor's list of producers
+     * @param product the product to be added
+     * @param quantity the quantity of the product to be added
+     */
     public void addToProductQuantity(Product product, int quantity) {
         if (productQuantity.containsKey(product)) {
             productQuantity.put(product, productQuantity.get(product) + quantity);
@@ -188,5 +191,9 @@ public class Vendor implements Serializable {
             productQuantity.put(product, quantity);
             products.add(product);
         }
+    }
+
+    public int getQuantity(Product product){
+        return productQuantity.get(product);
     }
 }

@@ -1,46 +1,0 @@
-
-~
-java:S1319"hThe type of "products" should be an interface such as "List" rather than the implementation "ArrayList".(æÆ
-}
-java:S1319"gThe type of "vendors" should be an interface such as "List" rather than the implementation "ArrayList".(Áâûå
-„
-java:S1319"iThe type of "producers" should be an interface such as "List" rather than the implementation "ArrayList".(’ïËÏøÿÿÿÿ
-
-java:S1319"fThe type of "orders" should be an interface such as "List" rather than the implementation "ArrayList".(‚ë¾Óûÿÿÿÿ
-q
-java:S1104"VMake saveVendor a static final constant or non-public and provide accessors if needed.(‹©•­ùÿÿÿÿ
-p
-java:S1104"UMake saveOrder a static final constant or non-public and provide accessors if needed.(ŒŒ±ìşÿÿÿÿ
-j
-java:S1104"TMake products a static final constant or non-public and provide accessors if needed.(æÆ
-i
-java:S1104"SMake vendors a static final constant or non-public and provide accessors if needed.(Áâûå
-p
-java:S1104"UMake producers a static final constant or non-public and provide accessors if needed.(’ïËÏøÿÿÿÿ
-m
-java:S1104"RMake orders a static final constant or non-public and provide accessors if needed.(‚ë¾Óûÿÿÿÿ
-K
-java:S1444"0Make this "public static saveVendor" field final(‹©•­ùÿÿÿÿ
-J
-java:S1444"/Make this "public static saveOrder" field final(ŒŒ±ìşÿÿÿÿ
-D
-java:S1444".Make this "public static products" field final(æÆ
-C
-java:S1444"-Make this "public static vendors" field final(Áâûå
-J
-java:S1444"/Make this "public static producers" field final(’ïËÏøÿÿÿÿ
-G
-java:S1444",Make this "public static orders" field final(‚ë¾Óûÿÿÿÿ
-3
-java:S2386"Make this member "protected".(æÆ
-3
-java:S2386"Make this member "protected".(Áâûå
-8
-java:S2386"Make this member "protected".(’ïËÏøÿÿÿÿ
-8
-java:S2386"Make this member "protected".(‚ë¾Óûÿÿÿÿ
-X	java:S125"<This block of commented-out lines of code should be removed.(æÆ8ˆ±‹‹À1
-X	java:S125"<This block of commented-out lines of code should be removed.(Áâûå8äï‹‹À1
-]	java:S125"<This block of commented-out lines of code should be removed.(’ïËÏøÿÿÿÿ8ÀİŒ‹À1
-]	java:S125"<This block of commented-out lines of code should be removed.(‚ë¾Óûÿÿÿÿ8ÁİŒ‹À1
-V	java:S125 "<This block of commented-out lines of code should be removed.(Å‚ÉÎúÿÿÿÿ

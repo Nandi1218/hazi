@@ -11,7 +11,9 @@ import java.util.ArrayList;
  */
 public class Save<T> {
     /** Method that saves the data to a serialized file
+     * @param filename the name of the file
      * @param list the list of the data to be saved
+     * @return true if the save was successful, false otherwise
      */
     public boolean save(ArrayList<T> list,String filename){
         if(list.isEmpty()) return false;

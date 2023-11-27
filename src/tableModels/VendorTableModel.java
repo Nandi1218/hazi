@@ -21,7 +21,7 @@ public class VendorTableModel extends AbstractTableModel{
 
     /**
      * This method returns the number of rows in the table.
-     * @return
+     * @return the number of rows in the table
      */
     @Override
     public int getRowCount() {
@@ -30,7 +30,7 @@ public class VendorTableModel extends AbstractTableModel{
 
     /**
      * This method returns the number of columns in the table.
-     * @return
+     * @return the number of columns in the table
      */
     @Override
     public int getColumnCount() {
@@ -41,7 +41,7 @@ public class VendorTableModel extends AbstractTableModel{
      * This method returns the value of the cell at the given row and column.
      * @param rowIndex        the row whose value is to be queried
      * @param columnIndex     the column whose value is to be queried
-     * @return
+     * @return the value Object at the specified cell
      */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {

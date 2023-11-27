@@ -1,0 +1,14 @@
+
+J
+java:S1066f"/Merge this if statement with the enclosing one.(θεϊώÿÿÿÿ
+n	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Φγ‹
+:
+java:S1948"$Make "vendors" private or transient.(¦Η’ο
+a
+java:S6201Z"FReplace this instanceof check and cast with 'instanceof String string'(θεϊώÿÿÿÿ
+a
+java:S6201^"FReplace this instanceof check and cast with 'instanceof Double double'(§Ψώÿÿÿÿ
+a
+java:S6201b"FReplace this instanceof check and cast with 'instanceof String string'(θεϊώÿÿÿÿ
+a
+java:S6201f"FReplace this instanceof check and cast with 'instanceof String string'(θεϊώÿÿÿÿ

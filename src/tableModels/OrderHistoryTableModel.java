@@ -16,7 +16,7 @@ public class OrderHistoryTableModel extends AbstractTableModel{
 
     /**
      * This method returns the number of rows in the table.
-     * @return
+     * @return the number of rows in the table
      */
         @Override
         public int getRowCount() {
@@ -25,7 +25,7 @@ public class OrderHistoryTableModel extends AbstractTableModel{
 
     /**
      * This method returns the number of columns in the table.
-     * @return
+     * @return the number of columns in the table
      */
         @Override
         public int getColumnCount() {
@@ -74,7 +74,7 @@ public class OrderHistoryTableModel extends AbstractTableModel{
     /**
      *  This method returns the class of the column at the given index.
      * @param columnIndex  the column being queried
-     * @return
+     * @return the class of the column
      */
         @Override
         public Class<?> getColumnClass(int columnIndex) {

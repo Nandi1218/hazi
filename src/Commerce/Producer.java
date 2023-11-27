@@ -25,9 +25,11 @@ public class Producer implements Serializable {
      * @param password        the producer's password
      * @param name            the producer's name
      * @param product         the product that the producer is selling
+     * @param blackListed     the list of vendors that the producer doesn't want to sell to
      * @param price           the price of the product
      * @param dailyProduction the daily production of the producer
      * @param quantity        the current quantity of the product
+     *
      */
     public Producer(String username, String password, String name, Product product, ArrayList<Vendor> blackListed, double price, int dailyProduction, int quantity) {
         this.username = username;
@@ -196,13 +198,16 @@ public class Producer implements Serializable {
 
     /**
      * setter method for the producer's preferred vendors
-     *
      * @param blackListed the new preferred vendors
      */
     public void setBlackListed(ArrayList<Vendor> blackListed) {
         this.blackListed = blackListed;
     }
 
+    /**
+     * This method updates the producer's quantity based on the last check
+     * @param lastCheck the date of the last check
+     */
     public void updateProducerQuantity(LocalDate lastCheck) {
         int days = lastCheck.until(LocalDate.now()).getDays();
         System.out.println(days);

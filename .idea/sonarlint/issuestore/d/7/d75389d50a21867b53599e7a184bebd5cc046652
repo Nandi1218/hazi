@@ -1,0 +1,10 @@
+
+f
+java:S1192"IDefine a constant instead of duplicating this literal "password" 8 times.(¡¯€´8¦×ËŒÁ1
+f
+java:S1192"IDefine a constant instead of duplicating this literal "username" 8 times.(¡¯€´8¦×ËŒÁ1
+{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Šİò¼ûÿÿÿÿ8¨×ËŒÁ1
+F
+java:S1128"$Remove this unused import 'UI.Main'.(¤‡¦Çüÿÿÿÿ8¤Í“Á1
+M
+java:S5960"+Remove this assertion from production code.(ìÀçšşÿÿÿÿ8½×ËŒÁ1

@@ -37,10 +37,10 @@ public class Order implements Serializable {
      * daysToDeliver is calculated based on the quantity and the daily production of the producer
      * totalPrice is calculated based on the quantity and the price of the producer
      * lastCheck is set to the current date
-     * @param buyer
-     * @param seller
-     * @param product
-     * @param quantity
+     * @param buyer the vendor that makes the order
+     * @param seller the producer that the order is made from
+     * @param product the product that is ordered
+     * @param quantity the quantity of the product that is ordered
      */
 
     public Order(Vendor buyer, Producer seller, Product product, int quantity) {
@@ -147,24 +147,26 @@ public class Order implements Serializable {
                 if (quantity < deliveredQuantity + seller.getQuantity()) {
                     quantityThisCheck = quantity - deliveredQuantity;
                     seller.setQuantity(seller.getQuantity() - quantityThisCheck);
-                    deliveredQuantity = quantity;
+                    deliveredQuantity += quantityThisCheck;
                     buyer.addToProductQuantity(product, quantityThisCheck);
                     delivered = true;
                 } else {
                     deliveredQuantity += seller.getQuantity();
                     buyer.addToProductQuantity(product, seller.getQuantity());
                     seller.setQuantity(0);
+                    delivered = false;
                 }
             } else if (deliveryDate.isEqual(LocalDate.now())) {
-                daysToDeliver = 0;
-                delivered = true;
+                daysToDeliver = ((quantity - deliveredQuantity) / seller.getDailyProduction())==0? 0:((quantity - deliveredQuantity) / seller.getDailyProduction()) + 1;
+                delivered = daysToDeliver == 0;
+
             } else if (deliveryDate.isBefore(LocalDate.now())) {
                 if (quantity > deliveredQuantity) {
                     quantityThisCheck = quantity - deliveredQuantity;
                     seller.setQuantity(seller.getQuantity() - quantityThisCheck);
-                    deliveredQuantity = quantity;
+                    deliveredQuantity += quantityThisCheck;
                     buyer.addToProductQuantity(product, quantityThisCheck);
-                    delivered = true;
+                    delivered = deliveredQuantity >= quantity;
                 }
                 if (quantity <= deliveredQuantity)
                     delivered = true;
@@ -218,4 +220,28 @@ public class Order implements Serializable {
     public int getDaysToDeliver() {
         return daysToDeliver;
     }
+    public Order(LocalDate startDate, Vendor buyer, Producer seller, int quantity, LocalDate lastCheck){
+        this.buyer = buyer;
+        this.seller = seller;
+        this.product = seller.getProduct();
+        this.quantity = quantity;
+        this.totalPrice = quantity * seller.getPrice();
+        this.date = startDate;
+        this.lastCheck = lastCheck;
+        if (quantity <= seller.getQuantity()) {
+            seller.setQuantity(seller.getQuantity() - quantity);
+            deliveredQuantity = quantity;
+            buyer.addToProductQuantity(product, quantity);
+            delivered = true;
+            daysToDeliver = 0;
+        } else { //if more than the seller has in stock is ordered then the order will be delivered in multiple parts
+            daysToDeliver = quantity - seller.getQuantity();
+            deliveredQuantity = seller.getQuantity();
+            buyer.addToProductQuantity(product, seller.getQuantity());
+            seller.setQuantity(0);
+            daysToDeliver = daysToDeliver / seller.getDailyProduction() + 1;
+        }
+        this.deliveryDate = date.plusDays(daysToDeliver);
+    }
+
 }
